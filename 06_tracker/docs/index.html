@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MA Thesis Pages Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>MA Thesis Pages Tracker</h1>
+
+    <section class="advice">
+      <h2>Quick Thesis Writing Advice</h2>
+      <ul>
+        <li><strong>Outline first:</strong> Break your thesis into sections and assign approximate pages to each.</li>
+        <li><strong>Write before editing:</strong> Produce draft text quickly; polish during revision week.</li>
+        <li><strong>Use timed sprints:</strong> Try focused 50/10 or Pomodoro blocks to keep momentum.</li>
+        <li><strong>Daily goal + log:</strong> Set a small page target and record what you completed each day.</li>
+        <li><strong>Keep sources handy:</strong> Use a reference manager and insert placeholders while drafting.</li>
+      </ul>
+    </section>
+
+    <section class="summary">
+      <label class="target">Target pages: <input id="targetInput" type="number" min="1" value="75"></label>
+      <div class="progress-wrap" aria-hidden>
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <div class="numbers">
+        <div>Total written: <strong id="totalWritten">0</strong></div>
+        <div>Remaining: <strong id="remaining">75</strong></div>
+      </div>
+    </section>
+
+    <form id="entryForm" class="entry-form">
+      <input id="dateInput" type="date" />
+      <input id="pagesInput" type="number" min="0" placeholder="Pages today" required />
+      <button type="submit">Add</button>
+    </form>
+
+    <section class="scheduler">
+      <h2>Plan Writing Schedule</h2>
+      <div class="plan-controls">
+        <label>Pick date: <input id="planDate" type="date"/></label>
+        <label>Pages: <input id="planPages" type="number" min="1" value="5"/></label>
+        <button id="addPlan">Add plan entry</button>
+      </div>
+      
+      <div class="plan-summary">
+        <div>Pages to plan: <strong id="pagesToPlan">0</strong></div>
+        <div>Pages/day (approx): <strong id="pagesPerDay">0</strong></div>
+      </div>
+      <ul id="planList" class="plan-list"></ul>
+      <div class="plan-actions">
+        <button id="syncPlan">Sync with entries</button>
+        <button id="exportCsv">Export CSV</button>
+        <button id="exportIcs">Export iCal (.ics)</button>
+      </div>
+    </section>
+
+    <h2>Entries</h2>
+    <ul id="entriesList" class="entries"></ul>
+
+    <div class="actions">
+      <button id="resetBtn" class="danger">Reset All</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
