@@ -4,7 +4,7 @@ Small single-file web app to track progress toward a page target (default 75 pag
 
 Usage
 
-- Open [ma-thesis-tracker/index.html](ma-thesis-tracker/index.html) in your browser.
+- Open [index.html](index.html) in your browser, or visit the live site: https://dariakiuru.github.io/writing-tracker/
 - Or serve the folder and open it in the browser. From the `ma-thesis-tracker` folder run:
 
 ```powershell
@@ -21,10 +21,12 @@ Features
 - See total written, remaining pages, and a simple progress bar.
 - Data is saved to `localStorage` in your browser.
 
-Planner
+Planner (manual)
 
-- Use the "Plan Writing Schedule" section to auto-schedule remaining pages across a number of days (default 15).
-- You can choose the start date and skip weekends. The planner will split remaining pages roughly evenly.
+- Pick a date, enter how many pages you plan to write that day, and click "Add plan entry".
+- The plan list shows your planned pages per date. You can edit the planned pages inline or delete a plan item.
+- When you check a plan item's checkbox it will create a matching entry and transfer the pages to the Entries pane. Unchecking removes auto-created entries for that plan item.
+- The planner auto-syncs with any existing entries on load (so previously written pages are reflected in the plan status).
 - Export the planned schedule as CSV or iCal (.ics) to add to your calendar.
 
 Notes
