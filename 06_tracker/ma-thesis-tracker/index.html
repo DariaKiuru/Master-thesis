@@ -10,6 +10,17 @@
   <div class="container">
     <h1>MA Thesis Pages Tracker</h1>
 
+    <section class="advice">
+      <h2>Quick Thesis Writing Advice</h2>
+      <ul>
+        <li><strong>Outline first:</strong> Break your thesis into sections and assign approximate pages to each.</li>
+        <li><strong>Write before editing:</strong> Produce draft text quickly; polish during revision week.</li>
+        <li><strong>Use timed sprints:</strong> Try focused 50/10 or Pomodoro blocks to keep momentum.</li>
+        <li><strong>Daily goal + log:</strong> Set a small page target and record what you completed each day.</li>
+        <li><strong>Keep sources handy:</strong> Use a reference manager and insert placeholders while drafting.</li>
+      </ul>
+    </section>
+
     <section class="summary">
       <label class="target">Target pages: <input id="targetInput" type="number" min="1" value="75"></label>
       <div class="progress-wrap" aria-hidden>
@@ -30,11 +41,11 @@
     <section class="scheduler">
       <h2>Plan Writing Schedule</h2>
       <div class="plan-controls">
-        <label>Start date: <input id="planStart" type="date"/></label>
-        <label>Days: <input id="planDays" type="number" min="1" value="15"/></label>
-        <label><input id="skipWeekends" type="checkbox" checked/> Skip weekends</label>
-        <button id="generatePlan">Auto-schedule</button>
+        <label>Pick date: <input id="planDate" type="date"/></label>
+        <label>Pages: <input id="planPages" type="number" min="1" value="5"/></label>
+        <button id="addPlan">Add plan entry</button>
       </div>
+      
       <div class="plan-summary">
         <div>Pages to plan: <strong id="pagesToPlan">0</strong></div>
         <div>Pages/day (approx): <strong id="pagesPerDay">0</strong></div>

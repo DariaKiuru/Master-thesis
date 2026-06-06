@@ -9,6 +9,9 @@
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; background:var(--bg); color:var(--text); margin:0; padding:24px}
 .container{max-width:720px;margin:0 auto;background:var(--card);padding:20px;border-radius:10px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
 h1{margin:0 0 12px;font-size:20px}
+.advice{background:#f8fafc;border-left:4px solid var(--accent);padding:12px 14px;margin-bottom:12px;border-radius:6px}
+.advice h2{margin:0 0 8px;font-size:16px}
+.advice ul{margin:0;padding-left:18px;font-size:14px}
 .summary{display:grid;gap:12px;margin-bottom:12px}
 .target input{width:96px;margin-left:8px}
 .progress-wrap{height:12px;background:#e6eefc;border-radius:8px;overflow:hidden}
@@ -37,7 +40,14 @@ h1{margin:0 0 12px;font-size:20px}
 .plan-list .done{color:green;font-weight:600}
 .plan-list .over{color:var(--danger);font-weight:600}
 .plan-list button{padding:6px 8px;border-radius:6px;border:1px solid #e6eefc;background:white;cursor:pointer}
+.plan-list input[type="checkbox"]{transform:scale(1.2);margin-right:8px}
+.plan-list .delete-plan{border-color:var(--danger);color:var(--danger);margin-left:8px}
 .plan-actions{display:flex;gap:8px}
 .plan-actions button{padding:8px 10px;border-radius:6px;border:1px solid #cbd5e1;background:white;cursor:pointer}
+
+.manual-plan{margin:8px 0;padding:8px;border-radius:6px;background:#fbfdff;border:1px solid #eef2ff;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.manual-plan h3{margin:0 8px 0 0;font-size:14px}
+.manual-plan input[type="date"], .manual-plan input[type="number"]{padding:6px;border:1px solid #e6eefc;border-radius:6px}
+.manual-plan button{padding:6px 10px;border-radius:6px;border:1px solid #cbd5e1;background:white;cursor:pointer}
 
 @media (max-width:520px){.entry-form{flex-direction:column}.target input{width:100%}}
