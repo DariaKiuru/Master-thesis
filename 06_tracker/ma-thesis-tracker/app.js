@@ -11,11 +11,10 @@
   const progressBar = document.getElementById('progressBar');
   const targetInput = document.getElementById('targetInput');
   const resetBtn = document.getElementById('resetBtn');
-  // planner elements
-  const planStart = document.getElementById('planStart');
-  const planDays = document.getElementById('planDays');
-  const skipWeekends = document.getElementById('skipWeekends');
-  const generatePlanBtn = document.getElementById('generatePlan');
+  // planner elements (manual workflow)
+  const planDateInput = document.getElementById('planDate');
+  const planPagesInput = document.getElementById('planPages');
+  const addPlanBtn = document.getElementById('addPlan');
   const pagesToPlanEl = document.getElementById('pagesToPlan');
   const pagesPerDayEl = document.getElementById('pagesPerDay');
   const planList = document.getElementById('planList');
@@ -42,13 +41,19 @@
   }
 
   function render() {
-    const target = Math.max(1, parseInt(targetInput.value, 10) || 75);
+    const rawTarget = parseInt(targetInput.value, 10);
+    const target = Number.isFinite(rawTarget) ? rawTarget : null;
     const total = entries.reduce((s,e)=>s+Number(e.pages),0);
-    const remaining = Math.max(0, target - total);
 
     totalWrittenEl.textContent = total;
-    remainingEl.textContent = remaining;
-    progressBar.style.width = Math.min(100, Math.round((total/target)*100)) + '%';
+    if (target) {
+      const remaining = Math.max(0, target - total);
+      remainingEl.textContent = remaining;
+      progressBar.style.width = Math.min(100, Math.round((total/target)*100)) + '%';
+    } else {
+      remainingEl.textContent = '—';
+      progressBar.style.width = '0%';
+    }
 
     entriesList.innerHTML = '';
     // sort descending by date
@@ -64,8 +69,8 @@
     }
   }
 
-  function addEntry(date, pages) {
-    entries.push({ id: Date.now() + Math.random(), date, pages: Number(pages) });
+  function addEntry(date, pages, origin, planId) {
+    entries.push({ id: Date.now() + Math.random(), date, pages: Number(pages), origin: origin || null, planId: planId || null });
     save(); render();
   }
 
@@ -85,9 +90,14 @@
   });
 
   targetInput.addEventListener('change', ()=>{
-    const t = Math.max(1, parseInt(targetInput.value, 10) || 75);
-    targetInput.value = t;
-    localStorage.setItem(TARGET_KEY, String(t));
+    const v = parseInt(targetInput.value, 10);
+    if (!Number.isFinite(v) || v < 1) {
+      targetInput.value = '';
+      localStorage.removeItem(TARGET_KEY);
+    } else {
+      targetInput.value = v;
+      localStorage.setItem(TARGET_KEY, String(v));
+    }
     render();
   });
 
@@ -102,7 +112,7 @@
   function setToday() {
     const today = new Date().toISOString().slice(0,10);
     dateInput.value = today;
-    planStart.value = today;
+    if (planDateInput) planDateInput.value = today;
   }
 
   // init
@@ -115,47 +125,14 @@
 
   function loadPlan() {
     const raw = localStorage.getItem(PLAN_KEY);
-    return raw ? JSON.parse(raw) : [];
-  }
-
-  function isWeekend(d) {
-    const day = d.getDay();
-    return day === 0 || day === 6;
-  }
-
-  function addDaysSkipping(date, add, skipWeekendsFlag) {
-    const res = new Date(date);
-    let remaining = add;
-    while (remaining > 0) {
-      res.setDate(res.getDate() + 1);
-      if (skipWeekendsFlag && isWeekend(res)) continue;
-      remaining--;
+    const arr = raw ? JSON.parse(raw) : [];
+    for (const p of arr) {
+      if (!p.id) p.id = Date.now() + Math.random();
+      if (!('donePages' in p)) p.donePages = 0;
     }
-    return res;
+    return arr;
   }
 
-  function generatePlan(start, days, totalPages, skipWeekendFlag) {
-    const plan = [];
-    // collect valid dates
-    let date = new Date(start);
-    for (let i=0; plan.length < days; ) {
-      if (skipWeekendFlag && isWeekend(date)) {
-        date.setDate(date.getDate() + 1);
-        continue;
-      }
-      plan.push({ date: date.toISOString().slice(0,10), pages: 0, donePages: 0 });
-      date.setDate(date.getDate() + 1);
-    }
-
-    const base = Math.floor(totalPages / days);
-    let remainder = totalPages - base * days;
-    for (let i=0;i<plan.length;i++){
-      plan[i].pages = base + (remainder>0?1:0);
-      plan[i].donePages = 0;
-      remainder = Math.max(0, remainder-1);
-    }
-    return plan;
-  }
 
   function renderPlan(plan) {
     planList.innerHTML = '';
@@ -181,52 +158,95 @@
       if (done >= planned && planned > 0) status.classList.add('done');
       if (done > planned) status.classList.add('over');
 
-      const markBtn = document.createElement('button'); markBtn.textContent = 'Mark done';
-      markBtn.addEventListener('click', ()=>{
-        p.donePages = p.pages;
-        savePlan(plan); renderPlan(plan); updatePlanSummary(plan);
+      const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.checked = (done >= planned && planned>0);
+      checkbox.addEventListener('change', ()=>{
+        const currentDone = entries.filter(e=>e.date===p.date).reduce((s,e)=>s+Number(e.pages),0);
+        if (checkbox.checked) {
+          const need = p.pages - currentDone;
+          if (need > 0) {
+            addEntry(p.date, need, 'plan-auto', p.id);
+          }
+          p.donePages = Math.min(p.pages, currentDone + Math.max(0, p.pages-currentDone));
+        } else {
+          // remove auto-created entries for this plan id
+          entries = entries.filter(e=>!(e.origin === 'plan-auto' && e.planId === p.id));
+          save();
+          p.donePages = entries.filter(e=>e.date===p.date).reduce((s,e)=>s+Number(e.pages),0);
+          render();
+        }
+        savePlan(plan);
+        renderPlan(plan);
+        updatePlanSummary(plan);
       });
 
-      const resetBtn = document.createElement('button'); resetBtn.textContent = 'Reset done';
-      resetBtn.addEventListener('click', ()=>{
-        p.donePages = 0; savePlan(plan); renderPlan(plan); updatePlanSummary(plan);
+      const deleteBtn = document.createElement('button'); deleteBtn.className='delete-plan'; deleteBtn.textContent = 'Delete';
+      deleteBtn.addEventListener('click', ()=>{
+        // remove plan and any auto-created entries linked to it
+        const existing = loadPlan();
+        const filtered = existing.filter(x=>x.id !== p.id);
+        // remove auto-created entries for this plan id
+        entries = entries.filter(e => !(e.origin === 'plan-auto' && e.planId === p.id));
+        save();
+        savePlan(filtered);
+        renderPlan(filtered);
+        updatePlanSummary(filtered);
+        render();
       });
 
-      right.appendChild(status); right.appendChild(markBtn); right.appendChild(resetBtn);
+      right.appendChild(checkbox); right.appendChild(status); right.appendChild(deleteBtn);
       li.appendChild(left); li.appendChild(right);
       planList.appendChild(li);
     }
   }
 
   function updatePlanSummary(plan) {
-    const total = plan.reduce((s,p)=>s+Number(p.pages),0);
-    pagesToPlanEl.textContent = total;
-    pagesPerDayEl.textContent = plan.length ? (total/plan.length).toFixed(1) : '0';
+    const totalPlanned = plan.reduce((s,p)=>s+Number(p.pages),0);
+    const rawTarget = parseInt(targetInput.value, 10);
+    const target = Number.isFinite(rawTarget) ? rawTarget : null;
+    const totalWritten = entries.reduce((s,e)=>s+Number(e.pages),0);
+    if (target) {
+      const remainingToTarget = Math.max(0, target - totalWritten);
+      const remainingToPlan = Math.max(0, remainingToTarget - totalPlanned);
+      pagesToPlanEl.textContent = remainingToPlan;
+    } else {
+      // show total planned when no explicit target is set
+      pagesToPlanEl.textContent = totalPlanned ? `${totalPlanned} planned` : '0';
+    }
+    pagesPerDayEl.textContent = plan.length ? (totalPlanned/plan.length).toFixed(1) : '0';
   }
 
-  generatePlanBtn.addEventListener('click', ()=>{
-    const days = Math.max(1, parseInt(planDays.value,10)||15);
-    const start = planStart.value || new Date().toISOString().slice(0,10);
-    const skip = Boolean(skipWeekends.checked);
-    // pages to plan: remaining pages toward target
-    const target = Math.max(1, parseInt(targetInput.value,10)||75);
-    const totalWritten = entries.reduce((s,e)=>s+Number(e.pages),0);
-    const remaining = Math.max(0, target - totalWritten);
-    if (remaining <= 0) {
-      alert('You have already reached your target.');
-      return;
+  // Removed auto-schedule control; planner is manual only now.
+
+  // Add manual plan item
+  addPlanBtn.addEventListener('click', ()=>{
+    const date = planDateInput.value || new Date().toISOString().slice(0,10);
+    const pages = Math.max(0, parseInt(planPagesInput.value,10) || 0);
+    if (!date) return alert('Pick a date');
+    if (pages <= 0) return alert('Pages must be > 0');
+    const plan = loadPlan();
+    // if date exists, update pages
+    const exists = plan.find(p=>p.date === date);
+    if (exists) {
+      exists.pages = pages;
+      exists.manual = true;
+    } else {
+      // compute donePages from entries
+      const done = entries.filter(e=>e.date===date).reduce((s,e)=>s+Number(e.pages),0);
+      plan.push({ id: Date.now() + Math.random(), date, pages, donePages: done, manual: true });
+      // sort by date
+      plan.sort((a,b)=> new Date(a.date) - new Date(b.date));
     }
-    const plan = generatePlan(start, days, remaining, skip);
     savePlan(plan);
     renderPlan(plan);
     updatePlanSummary(plan);
-    // auto-sync with existing entries so donePages reflects current data
-    syncEntriesToPlan(plan);
+    planPagesInput.value = '';
   });
 
-  // load existing plan on startup
+  // load existing plan on startup — only show manually created plan items
   const existingPlan = loadPlan();
-  if (existingPlan && existingPlan.length) { renderPlan(existingPlan); updatePlanSummary(existingPlan); }
+  const manualOnly = existingPlan.filter(p=>p.manual);
+  renderPlan(manualOnly);
+  updatePlanSummary(manualOnly);
 
   // sync plan with entries
   function syncEntriesToPlan(plan){
@@ -254,7 +274,7 @@
 
   // call sync when entries change: after add/remove
   const oldAddEntry = addEntry;
-  addEntry = function(date,pages){ oldAddEntry(date,pages); syncStoredPlanWithEntries(); };
+  addEntry = function(date,pages,origin,planId){ oldAddEntry(date,pages,origin,planId); syncStoredPlanWithEntries(); };
 
   const oldRemove = removeEntry;
   removeEntry = function(id){ oldRemove(id); syncStoredPlanWithEntries(); };
