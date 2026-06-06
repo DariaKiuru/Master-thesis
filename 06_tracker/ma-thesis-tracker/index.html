@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MA Thesis Pages Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>MA Thesis Pages Tracker</h1>
+
+    <section class="summary">
+      <label class="target">Target pages: <input id="targetInput" type="number" min="1" value="75"></label>
+      <div class="progress-wrap" aria-hidden>
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <div class="numbers">
+        <div>Total written: <strong id="totalWritten">0</strong></div>
+        <div>Remaining: <strong id="remaining">75</strong></div>
+      </div>
+    </section>
+
+    <form id="entryForm" class="entry-form">
+      <input id="dateInput" type="date" />
+      <input id="pagesInput" type="number" min="0" placeholder="Pages today" required />
+      <button type="submit">Add</button>
+    </form>
+
+    <h2>Entries</h2>
+    <ul id="entriesList" class="entries"></ul>
+
+    <div class="actions">
+      <button id="resetBtn" class="danger">Reset All</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
