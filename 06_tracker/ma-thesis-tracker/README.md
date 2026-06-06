@@ -1,4 +1,4 @@
-# MA Thesis Pages Tracker
+# Thesis Writing Tracker
 
 Small single-file web app to track progress toward a page target (default 75 pages).
 
