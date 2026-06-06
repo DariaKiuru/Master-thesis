@@ -27,6 +27,26 @@
       <button type="submit">Add</button>
     </form>
 
+    <section class="scheduler">
+      <h2>Plan Writing Schedule</h2>
+      <div class="plan-controls">
+        <label>Start date: <input id="planStart" type="date"/></label>
+        <label>Days: <input id="planDays" type="number" min="1" value="15"/></label>
+        <label><input id="skipWeekends" type="checkbox" checked/> Skip weekends</label>
+        <button id="generatePlan">Auto-schedule</button>
+      </div>
+      <div class="plan-summary">
+        <div>Pages to plan: <strong id="pagesToPlan">0</strong></div>
+        <div>Pages/day (approx): <strong id="pagesPerDay">0</strong></div>
+      </div>
+      <ul id="planList" class="plan-list"></ul>
+      <div class="plan-actions">
+        <button id="syncPlan">Sync with entries</button>
+        <button id="exportCsv">Export CSV</button>
+        <button id="exportIcs">Export iCal (.ics)</button>
+      </div>
+    </section>
+
     <h2>Entries</h2>
     <ul id="entriesList" class="entries"></ul>
 

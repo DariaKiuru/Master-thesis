@@ -21,6 +21,12 @@ Features
 - See total written, remaining pages, and a simple progress bar.
 - Data is saved to `localStorage` in your browser.
 
+Planner
+
+- Use the "Plan Writing Schedule" section to auto-schedule remaining pages across a number of days (default 15).
+- You can choose the start date and skip weekends. The planner will split remaining pages roughly evenly.
+- Export the planned schedule as CSV or iCal (.ics) to add to your calendar.
+
 Notes
 
 - This is a simple client-side app; no server or authentication.
