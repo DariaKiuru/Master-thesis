@@ -1,0 +1,10 @@
+arch
+matplotlib
+numpy
+pandas
+requests
+statsmodels
+torch
+transformers
+yfinance
+
