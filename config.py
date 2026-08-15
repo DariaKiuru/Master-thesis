@@ -15,7 +15,27 @@ END_DATE = "2023-12-31"
 # Reddit sources
 # -----------------------------------------------------------------------------
 
-SUBREDDITS = ["investing", "stocks"]
+SUBREDDITS = [
+    "investing",
+    "stocks",
+    "StockMarket",
+]
+
+# Broad candidate-retrieval terms for Phase 3A. These are extraction keywords,
+# not the final Ukraine-war financial relevance rule used in Phase 3B.
+REDDIT_EXTRACTION_KEYWORDS = [
+    "Ukraine",
+    "Ukrainian",
+    "Russia",
+    "Russian",
+    "Putin",
+    "Kyiv",
+    "Kiev",
+    "Moscow",
+    "invasion",
+    "sanctions",
+    "NATO",
+]
 
 # Reddit relevance-filter configuration (reserved for the Reddit phase)
 # The final Ukraine-war financial relevance rules are deliberately not defined
@@ -101,6 +121,15 @@ DIAGNOSTICS_DIR = OUTPUTS_DIR / "diagnostics"
 ARCHIVE_DIR = REPOSITORY_ROOT / "archive"
 
 RAW_REDDIT_FILE = RAW_REDDIT_DATA_DIR / "reddit_posts_2021_2023_raw.csv"
+REDDIT_CHECKPOINT_DIR = RAW_REDDIT_DATA_DIR / "checkpoints"
+REDDIT_CHECKPOINT_POSTS_FILE = REDDIT_CHECKPOINT_DIR / "reddit_posts_checkpoint.csv"
+REDDIT_CHECKPOINT_WINDOWS_FILE = (
+    REDDIT_CHECKPOINT_DIR / "reddit_windows_checkpoint.csv"
+)
+REDDIT_EXTRACTION_SUMMARY_FILE = (
+    DIAGNOSTICS_DIR / "reddit_extraction_summary.csv"
+)
+REDDIT_QUERY_SUMMARY_FILE = DIAGNOSTICS_DIR / "reddit_query_summary.csv"
 MARKET_PRICES_FILE = PROCESSED_DATA_DIR / "market_prices.csv"
 ANALYSIS_DATASET_FILE = PROCESSED_DATA_DIR / "analysis_dataset.csv"
 MARKET_DATA_SUMMARY_FILE = DIAGNOSTICS_DIR / "market_data_summary.csv"

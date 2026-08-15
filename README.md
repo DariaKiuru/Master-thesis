@@ -20,7 +20,7 @@ The project examines whether Ukraine-war-related Reddit sentiment is associated 
 
 ## Empirical workflow
 
-1. Collect Reddit posts from `r/investing` and `r/stocks`.
+1. Collect Reddit posts from `r/investing`, `r/stocks`, and `r/StockMarket`.
 2. Clean and filter posts for Ukraine-war-related financial discussion.
 3. Score title + body text using `ProsusAI/finbert`.
 4. Construct a daily sentiment index from post-level scores.
@@ -39,9 +39,16 @@ The project examines whether Ukraine-war-related Reddit sentiment is associated 
 
 ## Reddit sources
 
-The final analysis uses:
+The final analysis uses three finance/market-oriented communities:
+
 - `r/investing`
 - `r/stocks`
+- `r/StockMarket`
+
+The three communities are pooled into the main Reddit sample. Each qualifying
+post is equally weighted in the daily sentiment index; subreddits are not given
+equal aggregate weights. The subreddit identifier is retained for every post
+so sample composition can be reported descriptively.
 
 Both post titles and post bodies (`selftext`) are used.
 

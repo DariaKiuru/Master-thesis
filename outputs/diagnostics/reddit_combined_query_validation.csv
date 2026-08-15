@@ -1,0 +1,2 @@
+subreddit,period,combined_query_unique_ids,individual_queries_union_unique_ids,intersection,only_in_combined,only_in_individual,combined_api_requests,individual_api_requests,status
+investing,2022-03,0,167,0,0,167,1,13,not_equivalent

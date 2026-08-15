@@ -57,10 +57,25 @@ Because the sentiment index increases with more positive sentiment, H1 implies a
 
 ## Reddit data
 
-Use only:
+Use these three finance-focused Reddit communities:
 
 - `r/investing`
 - `r/stocks`
+- `r/StockMarket`
+
+The three communities are pooled into one Reddit sample.
+
+Retain the subreddit identifier for every post so that sample composition can
+be reported descriptively.
+
+Each qualifying post receives equal weight in the daily sentiment index,
+irrespective of subreddit.
+
+Do not balance, resample, or assign fixed weights to subreddits.
+
+Reddit sentiment should be interpreted as sentiment expressed in the selected
+finance-oriented Reddit communities rather than as representative sentiment
+of all investors.
 
 Final period:
 
@@ -72,8 +87,6 @@ Use both:
 - `selftext`
 
 Use English-language posts only.
-
-Reddit sentiment is a proxy for expressed sentiment in participating investor communities. Do not describe it as representative of all investors.
 
 The final relevance filter must focus on Ukraine-war-related financial discussion. Generic mentions of oil, gas, energy, inflation, or recession alone must not automatically make a post relevant.
 
