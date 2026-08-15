@@ -1,0 +1,49 @@
+metric,year,subreddit,category,count,proportion_of_corpus,definition
+total_candidate_posts,,,all,3033,1.0,All unique Phase 3A candidate posts.
+posts_by_year,2021,,,303,0.099901,Unique candidate posts by UTC calendar year.
+posts_by_year,2022,,,2287,0.754039,Unique candidate posts by UTC calendar year.
+posts_by_year,2023,,,443,0.14606,Unique candidate posts by UTC calendar year.
+posts_by_subreddit,,investing,,677,0.223211,Unique candidate posts by source subreddit.
+posts_by_subreddit,,stocks,,1447,0.477085,Unique candidate posts by source subreddit.
+posts_by_subreddit,,StockMarket,,909,0.299703,Unique candidate posts by source subreddit.
+posts_by_year_and_subreddit,2021,investing,,77,0.025387,Unique candidate posts by UTC year and source subreddit.
+posts_by_year_and_subreddit,2021,stocks,,139,0.045829,Unique candidate posts by UTC year and source subreddit.
+posts_by_year_and_subreddit,2021,StockMarket,,87,0.028684,Unique candidate posts by UTC year and source subreddit.
+posts_by_year_and_subreddit,2022,investing,,487,0.160567,Unique candidate posts by UTC year and source subreddit.
+posts_by_year_and_subreddit,2022,stocks,,1117,0.368282,Unique candidate posts by UTC year and source subreddit.
+posts_by_year_and_subreddit,2022,StockMarket,,683,0.22519,Unique candidate posts by UTC year and source subreddit.
+posts_by_year_and_subreddit,2023,investing,,113,0.037257,Unique candidate posts by UTC year and source subreddit.
+posts_by_year_and_subreddit,2023,stocks,,191,0.062974,Unique candidate posts by UTC year and source subreddit.
+posts_by_year_and_subreddit,2023,StockMarket,,139,0.045829,Unique candidate posts by UTC year and source subreddit.
+matched_keyword_count_distribution,,,1,1224,0.403561,Number of locally matched extraction keywords recorded for a post.
+matched_keyword_count_distribution,,,2,1037,0.341906,Number of locally matched extraction keywords recorded for a post.
+matched_keyword_count_distribution,,,3,412,0.135839,Number of locally matched extraction keywords recorded for a post.
+matched_keyword_count_distribution,,,4,187,0.061655,Number of locally matched extraction keywords recorded for a post.
+matched_keyword_count_distribution,,,5,89,0.029344,Number of locally matched extraction keywords recorded for a post.
+matched_keyword_count_distribution,,,6,54,0.017804,Number of locally matched extraction keywords recorded for a post.
+matched_keyword_count_distribution,,,7,22,0.007254,Number of locally matched extraction keywords recorded for a post.
+matched_keyword_count_distribution,,,8,6,0.001978,Number of locally matched extraction keywords recorded for a post.
+matched_keyword_count_distribution,,,9,2,0.000659,Number of locally matched extraction keywords recorded for a post.
+posts_matching_only_russia,,,Russia_only,499,0.164524,matched_search_keywords contains Russia and no other extraction keyword.
+posts_matching_only_russian,,,Russian_only,0,0.0,matched_search_keywords contains Russian and no other extraction keyword.
+russia_or_russian_without_direct_ukraine_terms,,,ambiguous_russia_russian,1258,0.414771,"Russia or Russian is matched, while Ukraine, Ukrainian, Kyiv, and Kiev are not."
+selftext_status,,,blank,263,0.086713,Raw selftext availability state; no posts are removed by this diagnostic.
+selftext_status,,,removed,845,0.278602,Raw selftext availability state; no posts are removed by this diagnostic.
+selftext_status,,,deleted,98,0.032311,Raw selftext availability state; no posts are removed by this diagnostic.
+usable_title_with_unavailable_body,,,title_available_body_unavailable,1206,0.397626,"Non-blank title with blank, [removed], or [deleted] selftext."
+diagnostic_crisis_context_any,,,any_context_term,1999,0.659083,Title + selftext contains at least one diagnostic crisis-context term; not a filter.
+diagnostic_context_term,,,war,833,0.274646,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,invasion,425,0.140125,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,troops,64,0.021101,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,military,146,0.048137,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,conflict,225,0.074184,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,sanctions,369,0.121662,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,NATO,93,0.030663,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,Crimea,19,0.006264,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,Donbas,2,0.000659,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,Donetsk,2,0.000659,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,Luhansk,2,0.000659,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,Ukraine,1469,0.484339,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,Ukrainian,158,0.052094,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,Kyiv,33,0.01088,Case-insensitive whole-term match in title + selftext; diagnostic only.
+diagnostic_context_term,,,Kiev,3,0.000989,Case-insensitive whole-term match in title + selftext; diagnostic only.
