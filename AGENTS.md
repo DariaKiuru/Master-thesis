@@ -124,17 +124,24 @@ Do not assign `sentiment = 0` to days with no Reddit posts. No discussion is not
 
 ## Equity markets
 
-Use these five indices:
+Use these five indices and sources:
 
-- EURO STOXX 50: `^STOXX50E`
-- DAX: `^GDAXI`
-- CAC 40: `^FCHI`
-- FTSE 100: `^FTSE`
-- WIG20: `WIG20.WA`
+- EURO STOXX 50: Yahoo Finance, `^STOXX50E`
+- DAX: Yahoo Finance, `^GDAXI`
+- CAC 40: Yahoo Finance, `^FCHI`
+- FTSE 100: Yahoo Finance, `^FTSE`
+- WIG20: Stooq, symbol `wig20`, standardized as `WIG20`
 
-Do not use `GPW.WA` as WIG20.
+The WIG20 observations were produced by Stooq and retrieved through an archived
+January 2025 response from Stooq's historical-data endpoint because the live
+endpoint returned a JavaScript-verification page. Preserve this provenance in
+the market-data diagnostics.
 
-Use adjusted closing prices.
+Do not use `WIG20.WA` or `GPW.WA` as WIG20.
+
+For the four Yahoo Finance indices, use adjusted closing levels. For WIG20, use
+the Stooq daily Close field. Store both consistently in the common
+`close_level` variable.
 
 Calculate daily log returns as:
 
@@ -247,7 +254,7 @@ Check at minimum:
 - FinBERT probabilities are within `[0, 1]`
 - `positive_prob + neutral_prob + negative_prob` is approximately `1`
 - `sentiment_score` is within `[-1, 1]`
-- adjusted closing prices are positive
+- market `close_level` values are positive
 - there are no duplicate `index_name + date` combinations
 - GARCH conditional volatility is positive and finite
 - regression input contains no NaN or infinite values

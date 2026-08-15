@@ -25,7 +25,7 @@ The project examines whether Ukraine-war-related Reddit sentiment is associated 
 3. Score title + body text using `ProsusAI/finbert`.
 4. Construct a daily sentiment index from post-level scores.
 5. Retain daily Reddit post count as a separate attention measure.
-6. Collect adjusted close prices for five European equity indices.
+6. Collect closing levels for five European equity indices.
 7. Calculate daily log returns.
 8. Estimate GARCH(1,1) models with Student-t innovations.
 9. Align Reddit and market data by trading day.
@@ -70,15 +70,27 @@ Daily Reddit post count is retained separately as an attention measure.
 
 ## Equity markets
 
-| Market | Yahoo Finance ticker |
-|---|---|
-| EURO STOXX 50 | `^STOXX50E` |
-| DAX | `^GDAXI` |
-| CAC 40 | `^FCHI` |
-| FTSE 100 | `^FTSE` |
-| WIG20 | `WIG20.WA` |
+| Market | Data source | Source symbol | Stored ticker | Price field |
+|---|---|---|---|---|
+| EURO STOXX 50 | Yahoo Finance | `^STOXX50E` | `^STOXX50E` | Adj Close |
+| DAX | Yahoo Finance | `^GDAXI` | `^GDAXI` | Adj Close |
+| CAC 40 | Yahoo Finance | `^FCHI` | `^FCHI` | Adj Close |
+| FTSE 100 | Yahoo Finance | `^FTSE` | `^FTSE` | Adj Close |
+| WIG20 | Stooq | `wig20` | `WIG20` | Close |
 
-Adjusted closing prices are used.
+The source-specific price fields are standardized as `close_level` in the
+common market-price dataset.
+
+### WIG20 data provenance
+
+The WIG20 observations were produced by Stooq. Because the live Stooq endpoint
+returned a JavaScript-verification page, the dataset was retrieved through an
+archived January 2025 copy of Stooq's historical-data response:
+
+`https://web.archive.org/web/20250114102640id_/https://stooq.com/q/d/l/?s=wig20&i=d`
+
+The diagnostic summary records `data_source = Stooq` and
+`retrieval_method = Internet Archive snapshot of Stooq` for WIG20.
 
 Daily log returns are calculated as:
 
