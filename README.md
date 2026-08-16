@@ -154,6 +154,11 @@ Daily log returns are calculated as:
 
 `log_return_t = ln(P_t / P_t-1)`
 
+The approved Phase 5 implementation is
+`src/10_build_market_volatility.py`. Its canonical output is
+`data/processed/market_returns_garch.csv`. It retains `log_return` in decimal
+units and uses `return_pct = 100 * log_return` as the GARCH estimation input.
+
 ## Volatility model
 
 Conditional volatility is estimated separately for each market using:
@@ -163,7 +168,11 @@ Conditional volatility is estimated separately for each market using:
 
 The Python `arch` package is used for estimation.
 
-The estimated conditional standard deviation is retained as the daily market-volatility variable.
+The estimated conditional standard deviation is retained as
+`garch_volatility` in percentage-return units. Model parameters and truthful
+optimizer/convergence diagnostics are saved under `outputs/tables/` and
+`outputs/diagnostics/`, respectively. Information criteria are retained only
+as technical diagnostics and are not used for model selection.
 
 ## Regression specification
 
@@ -200,12 +209,13 @@ The final active methodology does **not** include:
 
 ## Repository structure
 
-The validated empirical pipeline through Phase 4B is
+The validated upstream empirical pipeline is
 `src/01_download_market_data.py` through `src/08_build_daily_sentiment.py`,
 including the intermediate Reddit inspection and relevance-validation scripts.
-The one-time descriptive-results backfill is implemented separately in
-`src/09_build_descriptive_results.py`. Later econometric stages are not yet
-finalized.
+The one-time descriptive-results backfill is implemented in
+`src/09_build_descriptive_results.py`, and Phase 5 return/GARCH construction is
+implemented in `src/10_build_market_volatility.py`. Trading-day alignment and
+regression are not yet finalized.
 
 ```text
 Master-thesis/
@@ -228,7 +238,8 @@ Master-thesis/
 │   ├── 06_clean_reddit.py
 │   ├── 07_score_finbert.py
 │   ├── 08_build_daily_sentiment.py
-│   └── 09_build_descriptive_results.py
+│   ├── 09_build_descriptive_results.py
+│   └── 10_build_market_volatility.py
 ├── outputs/
 │   ├── figures/
 │   ├── tables/
@@ -296,8 +307,8 @@ The final repository should:
 ## Status
 
 The retrospective descriptive-results checkpoint for the validated market-data,
-Reddit-cleaning, FinBERT, and daily Reddit phases is complete. It is implemented
-by `src/09_build_descriptive_results.py` and writes reconciled tables, diagnostics,
-and 300-dpi descriptive figures under `outputs/`. The frozen processed datasets
-were not changed. Market returns, GARCH, trading-day alignment, and regression
-are not part of this checkpoint.
+Reddit-cleaning, FinBERT, and daily Reddit phases is complete. Phase 5 market
+returns and the five constant-mean GARCH(1,1)-Student-t models have been computed,
+validated, and approved by the researcher, with canonical data, tables,
+diagnostics, and figures under the repository's standard output directories.
+Trading-day alignment, lag construction, and regression have not started.

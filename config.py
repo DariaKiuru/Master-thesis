@@ -306,6 +306,18 @@ FINBERT_CHECKPOINT_INTERVAL = 800
 
 
 # -----------------------------------------------------------------------------
+# GARCH volatility
+# -----------------------------------------------------------------------------
+
+GARCH_MEAN_MODEL = "Constant"
+GARCH_VOLATILITY_MODEL = "GARCH"
+GARCH_P = 1
+GARCH_O = 0
+GARCH_Q = 1
+GARCH_DISTRIBUTION = "StudentsT"
+
+
+# -----------------------------------------------------------------------------
 # Regression
 # -----------------------------------------------------------------------------
 
@@ -470,6 +482,23 @@ FINBERT_LABEL_DISTRIBUTION_FIGURE = (
 DAILY_REDDIT_SENTIMENT_FIGURE = FIGURES_DIR / "daily_reddit_sentiment.png"
 DAILY_REDDIT_ATTENTION_FIGURE = FIGURES_DIR / "daily_reddit_attention.png"
 MARKET_PRICE_LEVELS_QC_FIGURE = FIGURES_DIR / "market_price_levels_qc.png"
+
+# Phase 5 market returns and GARCH(1,1)-Student-t volatility.
+MARKET_RETURNS_GARCH_FILE = PROCESSED_DATA_DIR / "market_returns_garch.csv"
+MARKET_RETURN_DESCRIPTIVES_TABLE = (
+    TABLES_DIR / "market_return_descriptives.csv"
+)
+GARCH_PARAMETERS_TABLE = TABLES_DIR / "garch_parameters.csv"
+GARCH_VOLATILITY_DESCRIPTIVES_TABLE = (
+    TABLES_DIR / "garch_volatility_descriptives.csv"
+)
+GARCH_MODEL_DIAGNOSTICS_FILE = (
+    DIAGNOSTICS_DIR / "garch_model_diagnostics.csv"
+)
+MARKET_LOG_RETURNS_FIGURE = FIGURES_DIR / "market_log_returns.png"
+GARCH_CONDITIONAL_VOLATILITY_FIGURE = (
+    FIGURES_DIR / "garch_conditional_volatility.png"
+)
 
 FINBERT_CHECKPOINT_DIR = REPOSITORY_ROOT / "checkpoints" / "finbert"
 MARKET_PRICES_FILE = PROCESSED_DATA_DIR / "market_prices.csv"
