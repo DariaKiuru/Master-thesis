@@ -301,6 +301,8 @@ REDDIT_MAX_EXPECTED_FINAL_RELEVANCE_INCREASE = 100
 FINBERT_MODEL = "ProsusAI/finbert"
 CHUNK_MAX_WORDS = 30
 MAX_CHUNKS_PER_POST = 120
+FINBERT_BATCH_SIZE = 8
+FINBERT_CHECKPOINT_INTERVAL = 800
 
 
 # -----------------------------------------------------------------------------
@@ -409,12 +411,27 @@ REDDIT_RULE_NEWLY_EXCLUDED_REVIEW_FILE = (
 )
 REDDIT_RULE_COMPARISON_RANDOM_SEED = 20250303
 CLEANED_REDDIT_FILE = PROCESSED_DATA_DIR / "reddit_posts_cleaned.csv"
+FINBERT_REDDIT_FILE = PROCESSED_DATA_DIR / "reddit_posts_finbert.csv"
 REDDIT_CLEANING_SUMMARY_FILE = (
     DIAGNOSTICS_DIR / "reddit_cleaning_summary.csv"
 )
 REDDIT_LANGUAGE_VALIDATION_FILE = (
     DIAGNOSTICS_DIR / "reddit_language_validation.csv"
 )
+FINBERT_SENTIMENT_SUMMARY_FILE = (
+    DIAGNOSTICS_DIR / "finbert_sentiment_summary.csv"
+)
+FINBERT_CLASS_DISTRIBUTION_FILE = (
+    DIAGNOSTICS_DIR / "finbert_class_distribution.csv"
+)
+FINBERT_REVIEW_SAMPLE_FILE = (
+    DIAGNOSTICS_DIR / "finbert_review_sample.csv"
+)
+FINBERT_DEVELOPMENT_SAMPLE_FILE = (
+    DIAGNOSTICS_DIR / "finbert_development_sample.csv"
+)
+FINBERT_BENCHMARK_FILE = DIAGNOSTICS_DIR / "finbert_inference_benchmark.csv"
+FINBERT_CHECKPOINT_DIR = REPOSITORY_ROOT / "checkpoints" / "finbert"
 MARKET_PRICES_FILE = PROCESSED_DATA_DIR / "market_prices.csv"
 ANALYSIS_DATASET_FILE = PROCESSED_DATA_DIR / "analysis_dataset.csv"
 MARKET_DATA_SUMMARY_FILE = DIAGNOSTICS_DIR / "market_data_summary.csv"

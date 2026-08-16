@@ -1,0 +1,4 @@
+# These CSVs preserve verbatim multi-line Reddit text from the immutable input.
+# Embedded trailing spaces are empirical content, not source-code whitespace.
+data/processed/reddit_posts_finbert.csv -whitespace
+outputs/diagnostics/finbert_review_sample.csv -whitespace

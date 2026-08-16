@@ -65,6 +65,42 @@ For each post, FinBERT provides:
 
 Long posts are divided into smaller chunks. The positive, neutral, and negative probabilities are averaged across chunks before the post-level score is constructed.
 
+The finalized Phase 4A implementation is `src/07_score_finbert.py`. It uses
+deterministic sentence-aware conceptual chunks of approximately 30 words, with
+a maximum of 120 conceptual chunks per post. Tokenizer-safeguard fragments do
+not change the conceptual-chunk weights: fragment probabilities are first
+reconstructed into one conceptual-chunk probability vector using word-count
+weights, and only then are conceptual chunks averaged to the post level. Silent
+tokenizer truncation is not permitted.
+
+The validated Phase 4A reconciliation is:
+
+```text
+34,879 retained conceptual chunks
+-> 34,884 FinBERT model inputs
+-> 34,879 reconstructed conceptual probability vectors
+-> 1,503 post-level observations
+```
+
+The production scorer uses deterministic length-aware batches of 8 inputs,
+dynamic padding, inference mode, and atomic checkpoints every 800 model inputs.
+It skips inference when complete outputs validate successfully. To resume an
+interrupted run from a matching checkpoint, use:
+
+```powershell
+python src/07_score_finbert.py --resume --batch-size 8 --checkpoint-interval 800
+```
+
+The canonical post-level output is
+`data/processed/reddit_posts_finbert.csv`. Phase 4A diagnostics are stored as
+`outputs/diagnostics/finbert_sentiment_summary.csv`,
+`outputs/diagnostics/finbert_class_distribution.csv`, and
+`outputs/diagnostics/finbert_review_sample.csv`.
+
+`finbert_development_sample.csv` and `finbert_inference_benchmark.csv` are
+development-only reproducibility artifacts. They are not empirical inputs and
+do not contribute observations to the canonical Phase 4A output.
+
 The post-level sentiment score is:
 
 `sentiment_score = positive_prob - negative_prob`
@@ -147,7 +183,12 @@ The final active methodology does **not** include:
 - FinBERT fine-tuning
 - machine-learning market-prediction models
 
-## Planned repository structure
+## Repository structure
+
+The numbered tree below was an early plan. The active pipeline through Phase
+4A is `src/01_download_market_data.py` through
+`src/07_score_finbert.py`, including the intermediate Reddit inspection and
+relevance-validation scripts. Later numbered stages are not yet finalized.
 
 ```text
 Master-thesis/
@@ -233,4 +274,6 @@ The final repository should:
 
 ## Status
 
-This repository is currently being refactored from an experimental development structure into the final thesis pipeline. The code and file structure may change as individual implementation phases are completed.
+Phase 4A is complete: the immutable 1,503-post Phase 3B dataset has been scored
+with FinBERT and validated at the post level. Daily aggregation and subsequent
+market, GARCH, alignment, and regression phases are not part of this milestone.
