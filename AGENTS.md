@@ -252,6 +252,16 @@ The active pipeline must produce material for:
 
 Do not create event-study, robustness, Granger, VAR, or wavelet result sections.
 
+## Phase completion standard
+
+An empirical phase is complete only when it provides its canonical processed
+output, technical validation diagnostics, descriptive or thesis-facing tables,
+appropriate descriptive figures, and a concise review of observed patterns and
+anything unusual that warrants inspection. These reporting outputs must
+describe the already-approved variables and must not introduce additional
+methodology. The retrospective reporting backfill for the validated pre-GARCH
+phases is implemented in `src/09_build_descriptive_results.py`.
+
 ## Coding style
 
 Prioritize readability over software-engineering complexity.

@@ -435,6 +435,42 @@ FINBERT_BENCHMARK_FILE = DIAGNOSTICS_DIR / "finbert_inference_benchmark.csv"
 DAILY_REDDIT_SUMMARY_FILE = (
     DIAGNOSTICS_DIR / "daily_reddit_sentiment_summary.csv"
 )
+
+# Retrospective descriptive results for validated Phases 2 through 4B.
+REDDIT_SAMPLE_CONSTRUCTION_TABLE = (
+    TABLES_DIR / "reddit_sample_construction.csv"
+)
+REDDIT_SAMPLE_COMPOSITION_TABLE = TABLES_DIR / "reddit_sample_composition.csv"
+FINBERT_POST_DESCRIPTIVES_TABLE = (
+    TABLES_DIR / "finbert_post_sentiment_descriptives.csv"
+)
+FINBERT_PROCESSING_DIAGNOSTICS_TABLE = (
+    TABLES_DIR / "finbert_processing_diagnostics.csv"
+)
+DAILY_REDDIT_DESCRIPTIVES_TABLE = (
+    TABLES_DIR / "daily_reddit_descriptives.csv"
+)
+SENTIMENT_WEIGHTING_COMPARISON_TABLE = (
+    TABLES_DIR / "sentiment_weighting_comparison.csv"
+)
+MARKET_PRICE_COVERAGE_TABLE = TABLES_DIR / "market_price_coverage.csv"
+DAILY_REDDIT_EXTREMES_FILE = DIAGNOSTICS_DIR / "daily_reddit_extremes.csv"
+DESCRIPTIVE_RESULTS_VALIDATION_FILE = (
+    DIAGNOSTICS_DIR / "descriptive_results_validation.csv"
+)
+REDDIT_SAMPLE_COMPOSITION_FIGURE = (
+    FIGURES_DIR / "reddit_sample_composition.png"
+)
+FINBERT_SENTIMENT_SCORE_FIGURE = (
+    FIGURES_DIR / "finbert_sentiment_score_distribution.png"
+)
+FINBERT_LABEL_DISTRIBUTION_FIGURE = (
+    FIGURES_DIR / "finbert_label_distribution.png"
+)
+DAILY_REDDIT_SENTIMENT_FIGURE = FIGURES_DIR / "daily_reddit_sentiment.png"
+DAILY_REDDIT_ATTENTION_FIGURE = FIGURES_DIR / "daily_reddit_attention.png"
+MARKET_PRICE_LEVELS_QC_FIGURE = FIGURES_DIR / "market_price_levels_qc.png"
+
 FINBERT_CHECKPOINT_DIR = REPOSITORY_ROOT / "checkpoints" / "finbert"
 MARKET_PRICES_FILE = PROCESSED_DATA_DIR / "market_prices.csv"
 ANALYSIS_DATASET_FILE = PROCESSED_DATA_DIR / "analysis_dataset.csv"

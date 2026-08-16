@@ -1,0 +1,19 @@
+dimension,category,count,percentage
+year,2021,83,5.52228875582169
+year,2022,1197,79.64071856287424
+year,2023,223,14.836992681304059
+subreddit,stocks,772,51.36393878908849
+subreddit,StockMarket,433,28.80904856952761
+subreddit,investing,298,19.8270126413839
+text_type,title only,253,16.833000665335994
+text_type,title + body,1250,83.166999334664
+body_status,available,1250,83.166999334664
+body_status,blank,69,4.590818363273453
+body_status,deleted,19,1.2641383898868928
+body_status,removed,165,10.978043912175648
+relevance_path,geopolitical_crisis_financial,1456,96.87292082501664
+relevance_path,crisis_specific_financial_consequence,21,1.3972055888223553
+relevance_path,multiple_paths,26,1.7298735861610113
+language_status,detected_english,1464,97.40518962075848
+language_status,uncertain,4,0.2661343978709248
+language_status,uncertain_short,35,2.3286759813705924

@@ -1,0 +1,6 @@
+order,metric_type,stage_or_metric,count,change_from_previous_stage,retention_from_previous_percent,note
+1,sample_size,Phase 3A candidate posts,3033,,,Broad validated candidate corpus
+2,sample_size,Phase 3B.3 retained,1491,-1542,49.15924826904055,Validated intermediate relevance rule
+3,sample_size,Final Phase 3B retained,1503,12,100.80482897384306,Final validated relevance refinement
+4,removed_count,Confidently non-English removed,0,,,Removal count; not a sample-size stage
+5,sample_size,Final FinBERT-ready posts,1503,0,100.0,Immutable Phase 3B canonical sample

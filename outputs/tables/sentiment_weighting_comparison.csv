@@ -1,0 +1,3 @@
+descriptive_mean,observations,mean_sentiment,weighting_unit,note
+Mean post-level sentiment,1503,-0.13258174668151895,Each post receives equal weight,"Descriptive mean across all 1,503 post-level scores"
+Mean observed calendar-day sentiment,504,-0.10782156903129005,Each populated calendar day receives equal weight,Descriptive mean across 504 populated days; this does not change the within-day equal-post-weight sentiment definition

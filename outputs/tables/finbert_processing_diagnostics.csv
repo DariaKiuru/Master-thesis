@@ -1,0 +1,9 @@
+metric,value,unit,description,source_metric
+total_pre_cap_conceptual_chunks,40780,conceptual chunks,Conceptual chunks before applying the 120-chunk post cap,total_uncapped_chunks
+retained_conceptual_chunks,34879,conceptual chunks,Conceptual chunks retained after the cap,total_scored_chunks
+posts_affected_by_120_chunk_cap,69,posts,Posts whose conceptual chunks were capped at 120,posts_hitting_120_chunk_cap
+maximum_pre_cap_chunks_per_post,281,conceptual chunks,Largest conceptual-chunk count before the cap,maximum_uncapped_chunks_per_post
+conceptual_chunks_requiring_tokenizer_safeguard,3,conceptual chunks,Conceptual chunks temporarily fragmented for tokenizer safety,conceptual_chunks_requiring_internal_fragmentation
+temporary_low_level_model_fragments,8,model fragments,Temporary fragments used for the three safeguarded chunks,total_internal_model_fragments
+final_model_inputs,34884,model inputs,FinBERT inputs after temporary safeguard fragmentation,total_final_model_inputs
+reconstructed_conceptual_probability_vectors,34879,probability vectors,Conceptual-chunk vectors reconstructed before post averaging,retained_conceptual_chunks_checked

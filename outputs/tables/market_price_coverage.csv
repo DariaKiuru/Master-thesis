@@ -1,0 +1,6 @@
+index_name,source_symbol,ticker,data_source,retrieval_method,source_reference,number_of_observations,first_date,last_date,missing_close_level_values,duplicate_dates
+EURO_STOXX_50,^STOXX50E,^STOXX50E,Yahoo Finance,Yahoo Finance API,,759,2021-01-04,2023-12-29,0,0
+DAX,^GDAXI,^GDAXI,Yahoo Finance,Yahoo Finance API,,767,2021-01-04,2023-12-29,0,0
+CAC_40,^FCHI,^FCHI,Yahoo Finance,Yahoo Finance API,,770,2021-01-04,2023-12-29,0,0
+FTSE_100,^FTSE,^FTSE,Yahoo Finance,Yahoo Finance API,,754,2021-01-04,2023-12-29,0,0
+WIG20,wig20,WIG20,Stooq,Internet Archive snapshot of Stooq,https://web.archive.org/web/20250114102640id_/https://stooq.com/q/d/l/?s=wig20&i=d,752,2021-01-04,2023-12-29,0,0

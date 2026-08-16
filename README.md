@@ -200,9 +200,11 @@ The final active methodology does **not** include:
 
 ## Repository structure
 
-The active pipeline through Phase 4B is `src/01_download_market_data.py`
-through `src/08_build_daily_sentiment.py`, including the intermediate Reddit
-inspection and relevance-validation scripts. Later numbered stages are not yet
+The validated empirical pipeline through Phase 4B is
+`src/01_download_market_data.py` through `src/08_build_daily_sentiment.py`,
+including the intermediate Reddit inspection and relevance-validation scripts.
+The one-time descriptive-results backfill is implemented separately in
+`src/09_build_descriptive_results.py`. Later econometric stages are not yet
 finalized.
 
 ```text
@@ -225,7 +227,8 @@ Master-thesis/
 │   ├── 05_compare_reddit_relevance_rules.py
 │   ├── 06_clean_reddit.py
 │   ├── 07_score_finbert.py
-│   └── 08_build_daily_sentiment.py
+│   ├── 08_build_daily_sentiment.py
+│   └── 09_build_descriptive_results.py
 ├── outputs/
 │   ├── figures/
 │   ├── tables/
@@ -269,11 +272,16 @@ The repository is being cleaned and implemented in phases:
 4. Reddit extraction and cleaning
 5. FinBERT scoring
 6. daily sentiment construction
-7. GARCH modelling
-8. trading-day alignment and regression
-9. thesis-ready outputs and final reproducibility checks
+7. retrospective descriptive-results review for completed empirical phases
+8. GARCH modelling
+9. trading-day alignment and regression
+10. final thesis outputs and reproducibility checks
 
-Each phase should be reviewed before moving to the next one.
+An empirical phase is complete only after its canonical output, technical
+validation diagnostics, descriptive or thesis-facing tables, appropriate
+descriptive figures, and a review of observed patterns and unusual features
+have been produced. These reporting requirements must describe approved
+variables without adding new empirical methodology.
 
 ## Reproducibility
 
@@ -287,7 +295,9 @@ The final repository should:
 
 ## Status
 
-Phase 4B is complete: the immutable 1,503-post Phase 4A output has been validated
-and aggregated into the complete calendar-day Reddit sentiment and attention
-series. Market returns, GARCH, trading-day alignment, and regression phases are
-not part of this milestone.
+The retrospective descriptive-results checkpoint for the validated market-data,
+Reddit-cleaning, FinBERT, and daily Reddit phases is complete. It is implemented
+by `src/09_build_descriptive_results.py` and writes reconciled tables, diagnostics,
+and 300-dpi descriptive figures under `outputs/`. The frozen processed datasets
+were not changed. Market returns, GARCH, trading-day alignment, and regression
+are not part of this checkpoint.
