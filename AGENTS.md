@@ -101,6 +101,12 @@ Long title + selftext observations are chunked using the methodology currently d
 - approximately 30 words per chunk
 - maximum 120 chunks per post
 
+These are conceptual chunks. If a conceptual chunk exceeds the tokenizer's
+model-input limit, temporary safeguard fragments may be used for inference,
+but their probabilities must first be recombined into one conceptual-chunk
+probability vector. Safeguard fragmentation must not change conceptual-chunk
+weighting in the post-level average.
+
 For every chunk retain all three FinBERT probabilities:
 
 - positive
@@ -134,6 +140,12 @@ Daily attention is the number of relevant Reddit posts:
 Sentiment and attention are separate constructs.
 
 Do not assign `sentiment = 0` to days with no Reddit posts. No discussion is not the same as neutral discussion.
+
+The canonical descriptive output is
+`data/processed/daily_reddit_sentiment.csv` on the complete 2021-01-01 through
+2023-12-31 calendar. Zero-post days retain `post_count = 0`, missing sentiment,
+and missing mean probabilities. Daily class counts and mean probabilities are
+descriptive supporting variables only, not alternative sentiment indices.
 
 ## Equity markets
 
@@ -206,8 +218,11 @@ Keep the original calendar-day Reddit series for descriptive analysis.
 
 For regressions:
 
-- map non-trading-day Reddit observations to the next available trading day;
-- aggregate mapped data from post-level observations;
+- start from post-level observations in
+  `data/processed/reddit_posts_finbert.csv`;
+- map non-trading-day posts to the next available trading day;
+- aggregate the mapped posts rather than averaging already-aggregated
+  calendar-day sentiment means;
 - merge with each index's actual trading dates;
 - create lags only after the trading-day alignment;
 - never use future information.

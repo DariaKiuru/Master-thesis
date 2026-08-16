@@ -412,6 +412,7 @@ REDDIT_RULE_NEWLY_EXCLUDED_REVIEW_FILE = (
 REDDIT_RULE_COMPARISON_RANDOM_SEED = 20250303
 CLEANED_REDDIT_FILE = PROCESSED_DATA_DIR / "reddit_posts_cleaned.csv"
 FINBERT_REDDIT_FILE = PROCESSED_DATA_DIR / "reddit_posts_finbert.csv"
+DAILY_REDDIT_FILE = PROCESSED_DATA_DIR / "daily_reddit_sentiment.csv"
 REDDIT_CLEANING_SUMMARY_FILE = (
     DIAGNOSTICS_DIR / "reddit_cleaning_summary.csv"
 )
@@ -431,6 +432,9 @@ FINBERT_DEVELOPMENT_SAMPLE_FILE = (
     DIAGNOSTICS_DIR / "finbert_development_sample.csv"
 )
 FINBERT_BENCHMARK_FILE = DIAGNOSTICS_DIR / "finbert_inference_benchmark.csv"
+DAILY_REDDIT_SUMMARY_FILE = (
+    DIAGNOSTICS_DIR / "daily_reddit_sentiment_summary.csv"
+)
 FINBERT_CHECKPOINT_DIR = REPOSITORY_ROOT / "checkpoints" / "finbert"
 MARKET_PRICES_FILE = PROCESSED_DATA_DIR / "market_prices.csv"
 ANALYSIS_DATASET_FILE = PROCESSED_DATA_DIR / "analysis_dataset.csv"

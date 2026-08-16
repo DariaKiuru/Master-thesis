@@ -111,6 +111,21 @@ The daily sentiment index is the equal-weight mean of all post-level scores obse
 
 Daily Reddit post count is retained separately as an attention measure.
 
+The finalized Phase 4B implementation is
+`src/08_build_daily_sentiment.py`. It validates the immutable Phase 4A input
+before constructing `data/processed/daily_reddit_sentiment.csv` on the complete
+1,095-day calendar from 2021-01-01 through 2023-12-31. Calendar days without a
+relevant post retain `post_count = 0` and missing sentiment and mean
+probabilities; sentiment is not imputed. Daily positive, neutral, and negative
+label counts and mean FinBERT probabilities are descriptive supporting
+variables, not alternative sentiment indices. The reproducibility summary is
+`outputs/diagnostics/daily_reddit_sentiment_summary.csv`.
+
+The calendar-day file is used for descriptive analysis. Later market alignment
+must use `data/processed/reddit_posts_finbert.csv`, map post-level observations
+to each index's next available trading day, and aggregate the mapped posts. It
+must not average already-aggregated calendar-day sentiment means.
+
 ## Equity markets
 
 | Market | Data source | Source symbol | Stored ticker | Price field |
@@ -185,10 +200,10 @@ The final active methodology does **not** include:
 
 ## Repository structure
 
-The numbered tree below was an early plan. The active pipeline through Phase
-4A is `src/01_download_market_data.py` through
-`src/07_score_finbert.py`, including the intermediate Reddit inspection and
-relevance-validation scripts. Later numbered stages are not yet finalized.
+The active pipeline through Phase 4B is `src/01_download_market_data.py`
+through `src/08_build_daily_sentiment.py`, including the intermediate Reddit
+inspection and relevance-validation scripts. Later numbered stages are not yet
+finalized.
 
 ```text
 Master-thesis/
@@ -205,14 +220,12 @@ Master-thesis/
 ├── src/
 │   ├── 01_download_market_data.py
 │   ├── 02_extract_reddit.py
-│   ├── 03_clean_reddit.py
-│   ├── 04_score_finbert.py
-│   ├── 05_build_daily_sentiment.py
-│   ├── 06_fit_garch.py
-│   ├── 07_build_analysis_dataset.py
-│   ├── 08_descriptive_results.py
-│   ├── 09_regression_analysis.py
-│   └── run_pipeline.py
+│   ├── 03_inspect_reddit_candidates.py
+│   ├── 04_validate_reddit_relevance.py
+│   ├── 05_compare_reddit_relevance_rules.py
+│   ├── 06_clean_reddit.py
+│   ├── 07_score_finbert.py
+│   └── 08_build_daily_sentiment.py
 ├── outputs/
 │   ├── figures/
 │   ├── tables/
@@ -274,6 +287,7 @@ The final repository should:
 
 ## Status
 
-Phase 4A is complete: the immutable 1,503-post Phase 3B dataset has been scored
-with FinBERT and validated at the post level. Daily aggregation and subsequent
-market, GARCH, alignment, and regression phases are not part of this milestone.
+Phase 4B is complete: the immutable 1,503-post Phase 4A output has been validated
+and aggregated into the complete calendar-day Reddit sentiment and attention
+series. Market returns, GARCH, trading-day alignment, and regression phases are
+not part of this milestone.
