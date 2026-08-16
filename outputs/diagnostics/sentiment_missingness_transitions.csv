@@ -1,0 +1,6 @@
+index_name,trading_days,zero_attention_trading_days,prior_observed_to_observed_sentiment_lag1,prior_missing_to_missing_sentiment_lag1,subsequent_rows_ineligible_due_missing_prior_sentiment,consecutive_zero_attention_days_occur,longest_consecutive_zero_attention_run,longest_zero_attention_run_start,longest_zero_attention_run_end,longest_ineligible_run_due_missing_prior_sentiment,longest_missing_prior_sentiment_run_start,longest_missing_prior_sentiment_run_end
+EURO_STOXX_50,759,356,402,356,356,True,23,2021-10-13,2021-11-12,23,2021-10-14,2021-11-15
+DAX,767,359,407,359,359,True,23,2021-10-13,2021-11-12,23,2021-10-14,2021-11-15
+CAC_40,770,361,408,361,361,True,23,2021-10-13,2021-11-12,23,2021-10-14,2021-11-15
+FTSE_100,754,355,398,355,355,True,23,2021-10-13,2021-11-12,23,2021-10-14,2021-11-15
+WIG20,752,348,403,348,348,True,21,2021-10-13,2021-11-12,21,2021-10-14,2021-11-15

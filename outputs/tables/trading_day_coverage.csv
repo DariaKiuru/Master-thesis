@@ -1,0 +1,6 @@
+index_name,total_trading_dates,finite_garch_volatility_dates,populated_aligned_sentiment_dates,zero_attention_trading_dates,zero_attention_share,total_mapped_posts,missing_contemporaneous_sentiment_dates,first_trading_date,last_trading_date,maximum_attention,maximum_attention_date
+EURO_STOXX_50,759,758,403,356,0.46903820816864294,1503,356,2021-01-04,2023-12-29,58,2022-02-28
+DAX,767,766,408,359,0.4680573663624511,1503,359,2021-01-04,2023-12-29,58,2022-02-28
+CAC_40,770,769,409,361,0.4688311688311688,1503,361,2021-01-04,2023-12-29,58,2022-02-28
+FTSE_100,754,753,399,355,0.4708222811671088,1503,355,2021-01-04,2023-12-29,58,2022-02-28
+WIG20,752,751,404,348,0.4627659574468085,1503,348,2021-01-04,2023-12-29,58,2022-02-28

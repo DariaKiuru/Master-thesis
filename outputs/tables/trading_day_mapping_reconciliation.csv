@@ -1,0 +1,6 @@
+index_name,input_posts,same_day_mapped,forward_mapped,saturday_forwarded,sunday_forwarded,weekday_nontrading_forwarded,terminal_unmapped,total_mapped,unique_mapped_reddit_ids,duplicate_within_market_mappings,minimum_days_forward,mean_days_forward,maximum_days_forward
+EURO_STOXX_50,1503,1176,327,169,135,23,0,1503,1503,0,0,0.3532934131736527,4
+DAX,1503,1183,320,169,135,16,0,1503,1503,0,0,0.34331337325349304,4
+CAC_40,1503,1184,319,169,135,15,0,1503,1503,0,0,0.3406520292747838,4
+FTSE_100,1503,1161,342,169,135,38,0,1503,1503,0,0,0.37658017298735863,4
+WIG20,1503,1169,334,169,135,30,0,1503,1503,0,0,0.3586161011310712,4

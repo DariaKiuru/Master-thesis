@@ -1,0 +1,6 @@
+index_name,total_market_trading_rows,finite_current_garch_volatility_rows,structurally_unavailable_first_return_garch_rows,rows_with_available_prior_trading_row,rows_with_nonmissing_sentiment_lag1,rows_with_nonmissing_attention_lag1,rows_with_nonmissing_volatility_lag1,rows_with_nonmissing_return_lag1,otherwise_technically_usable_rows,finite_volatility_rows_with_missing_sentiment_lag1,rows_excluded_specifically_because_sentiment_lag1_missing,share_otherwise_technically_usable_lost_missing_sentiment,rows_complete_all_approved_phase7_variables,regression_eligible_rows,percentage_finite_volatility_rows_retained
+EURO_STOXX_50,759,758,1,758,402,758,757,757,757,356,356,0.4702774108322325,401,401,52.9023746701847
+DAX,767,766,1,766,407,766,765,765,765,359,359,0.469281045751634,406,406,53.00261096605744
+CAC_40,770,769,1,769,408,769,768,768,768,361,361,0.4700520833333333,407,407,52.925877763329
+FTSE_100,754,753,1,753,398,753,752,752,752,355,355,0.4720744680851064,397,397,52.722443559096945
+WIG20,752,751,1,751,403,751,750,750,750,348,348,0.464,402,402,53.52862849533955

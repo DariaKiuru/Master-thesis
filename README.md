@@ -174,6 +174,29 @@ optimizer/convergence diagnostics are saved under `outputs/tables/` and
 `outputs/diagnostics/`, respectively. Information criteria are retained only
 as technical diagnostics and are not used for model selection.
 
+Phase 5 is frozen at commit
+`f720e32fc73a79b7cc36d14223661d8055a04681`.
+
+## Trading-day alignment
+
+The Phase 6 implementation is `src/11_build_trading_day_alignment.py`, and its
+canonical full-calendar output is
+`data/processed/market_aligned_lagged.csv`. For each market separately, it
+starts from post-level observations in `reddit_posts_finbert.csv`, maps every
+post to the same or next actual market trading date, and then calculates the
+equal-post-weight sentiment mean and post-count attention. A trading date with
+no mapped posts retains `attention = 0` and missing sentiment; sentiment is not
+imputed. Posts without a later in-sample trading date are retained in the
+mapping reconciliation as `terminal_unmapped`.
+
+Sentiment, attention, volatility, and return lags are created only after the
+market-specific aggregation is merged onto the complete market panel.
+`return_lag1` uses decimal `log_return`. The resulting regression-eligibility
+rates are approximately 52.7% to 53.5% of finite-volatility rows because prior
+trading-day sentiment is structurally missing when no qualifying post was
+mapped to that day. Phase 6 has been reviewed and approved without changing
+the frozen methodology; no regression has been estimated.
+
 ## Regression specification
 
 The final regression is estimated separately for each market.
@@ -213,9 +236,10 @@ The validated upstream empirical pipeline is
 `src/01_download_market_data.py` through `src/08_build_daily_sentiment.py`,
 including the intermediate Reddit inspection and relevance-validation scripts.
 The one-time descriptive-results backfill is implemented in
-`src/09_build_descriptive_results.py`, and Phase 5 return/GARCH construction is
-implemented in `src/10_build_market_volatility.py`. Trading-day alignment and
-regression are not yet finalized.
+`src/09_build_descriptive_results.py`, Phase 5 return/GARCH construction is
+implemented in `src/10_build_market_volatility.py`, and the reviewable Phase 6
+alignment is implemented in `src/11_build_trading_day_alignment.py`. Regression
+has not started.
 
 ```text
 Master-thesis/
@@ -239,7 +263,8 @@ Master-thesis/
 │   ├── 07_score_finbert.py
 │   ├── 08_build_daily_sentiment.py
 │   ├── 09_build_descriptive_results.py
-│   └── 10_build_market_volatility.py
+│   ├── 10_build_market_volatility.py
+│   └── 11_build_trading_day_alignment.py
 ├── outputs/
 │   ├── figures/
 │   ├── tables/
@@ -311,4 +336,7 @@ Reddit-cleaning, FinBERT, and daily Reddit phases is complete. Phase 5 market
 returns and the five constant-mean GARCH(1,1)-Student-t models have been computed,
 validated, and approved by the researcher, with canonical data, tables,
 diagnostics, and figures under the repository's standard output directories.
-Trading-day alignment, lag construction, and regression have not started.
+Phase 6 market-specific trading-day alignment and lag construction have been
+computed, validated, and approved by the researcher. The future regression
+sample is conditional on observable prior-trading-day Reddit sentiment and is
+strongly concentrated in 2022. Regression has not started.

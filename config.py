@@ -500,6 +500,41 @@ GARCH_CONDITIONAL_VOLATILITY_FIGURE = (
     FIGURES_DIR / "garch_conditional_volatility.png"
 )
 
+# Phase 6 market-specific Reddit alignment and trading-row lags.
+MARKET_ALIGNED_LAGGED_FILE = PROCESSED_DATA_DIR / "market_aligned_lagged.csv"
+REDDIT_TRADING_DAY_MAPPING_FILE = (
+    DIAGNOSTICS_DIR / "reddit_trading_day_mapping.csv"
+)
+TRADING_DAY_MAPPING_RECONCILIATION_TABLE = (
+    TABLES_DIR / "trading_day_mapping_reconciliation.csv"
+)
+TRADING_DAY_COVERAGE_TABLE = TABLES_DIR / "trading_day_coverage.csv"
+ALIGNED_REDDIT_DESCRIPTIVES_TABLE = (
+    TABLES_DIR / "aligned_reddit_descriptives.csv"
+)
+ALIGNMENT_SAMPLE_SIZES_TABLE = TABLES_DIR / "alignment_sample_sizes.csv"
+REGRESSION_SAMPLE_SUPPORT_TABLE = (
+    TABLES_DIR / "regression_sample_support.csv"
+)
+YEARLY_REGRESSION_SUPPORT_TABLE = (
+    TABLES_DIR / "yearly_regression_support.csv"
+)
+TRADING_DAY_ALIGNMENT_VALIDATION_FILE = (
+    DIAGNOSTICS_DIR / "trading_day_alignment_validation.csv"
+)
+ALIGNMENT_TIMING_REVIEW_SAMPLE_FILE = (
+    DIAGNOSTICS_DIR / "alignment_timing_review_sample.csv"
+)
+ALIGNMENT_WEIGHTING_VALIDATION_FILE = (
+    DIAGNOSTICS_DIR / "alignment_weighting_validation.csv"
+)
+SENTIMENT_MISSINGNESS_TRANSITIONS_FILE = (
+    DIAGNOSTICS_DIR / "sentiment_missingness_transitions.csv"
+)
+MARKET_ALIGNED_ATTENTION_FIGURE = (
+    FIGURES_DIR / "market_aligned_attention.png"
+)
+
 FINBERT_CHECKPOINT_DIR = REPOSITORY_ROOT / "checkpoints" / "finbert"
 MARKET_PRICES_FILE = PROCESSED_DATA_DIR / "market_prices.csv"
 ANALYSIS_DATASET_FILE = PROCESSED_DATA_DIR / "analysis_dataset.csv"
