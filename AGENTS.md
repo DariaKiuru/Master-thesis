@@ -262,6 +262,27 @@ describe the already-approved variables and must not introduce additional
 methodology. The retrospective reporting backfill for the validated pre-GARCH
 phases is implemented in `src/09_build_descriptive_results.py`.
 
+## Frozen checkpoints and final consolidation
+
+Phase 7 and all upstream empirical results are frozen at commit
+`b032fac7ea05cfa575669395cec983b72799fd47`. Do not rerun, redesign, or replace
+the approved empirical specification in response to statistically
+insignificant sentiment coefficients. Verify canonical hashes before using the
+frozen outputs in later reporting.
+
+Phase 8 is reporting and reproducibility work only. Its deterministic entry
+point is `src/13_build_final_thesis_outputs.py`, which reads the frozen outputs
+and creates the final manifest, consolidated sample and regression tables,
+RQ/H1 synthesis, limitations summary, active-script inventory,
+reproducibility audit, and researcher-facing results note. Phase 8 must not
+estimate a new model, perform a robustness or specification search, impute
+sentiment, construct a new sentiment index, or make a causal claim.
+
+The frozen `outputs/tables/regression_results.csv` remains the authoritative
+machine-readable regression table. Phase 8 formatting may improve readability
+but must reproduce its values exactly. All Phase 8 outputs remain subject to
+researcher review before a final checkpoint is committed.
+
 ## Coding style
 
 Prioritize readability over software-engineering complexity.

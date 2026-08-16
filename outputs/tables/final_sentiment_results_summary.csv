@@ -1,0 +1,6 @@
+market,N,sentiment_coefficient,HAC_SE,p_value,CI_lower,CI_upper,observed_sign,H1_predicted_sign,CI_includes_zero,summary_interpretation
+EURO STOXX 50,401,-0.008802326530155368,0.03034217605404698,0.7717381913492116,-0.06827189880866111,0.05066724574835037,negative,negative,True,"negative direction, statistically imprecise"
+DAX,406,-0.01160379968180187,0.02413789545246323,0.6307087245307945,-0.05891320543122295,0.03570560606761921,negative,negative,True,"negative direction, statistically imprecise"
+CAC 40,407,-0.013180859299880483,0.02193889564701715,0.5479740908752672,-0.056180304628616666,0.029818586028855697,negative,negative,True,"negative direction, statistically imprecise"
+FTSE 100,397,-0.010544970081450031,0.021448069471592435,0.622965909374883,-0.05258241378368424,0.03149247362078417,negative,negative,True,"negative direction, statistically imprecise"
+WIG20,402,0.007913038861142151,0.013885200502884,0.5687522126913785,-0.019301454042627935,0.035127531764912234,positive,negative,True,"positive direction, statistically imprecise"

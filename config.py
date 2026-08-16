@@ -556,9 +556,29 @@ SENTIMENT_COEFFICIENT_COMPARISON_FIGURE = (
     FIGURES_DIR / "sentiment_coefficient_comparison.png"
 )
 
+# Phase 8 final thesis-output consolidation and reproducibility audit.
+FINAL_THESIS_OUTPUT_MANIFEST_TABLE = (
+    TABLES_DIR / "final_thesis_output_manifest.csv"
+)
+FINAL_SAMPLE_OVERVIEW_TABLE = TABLES_DIR / "final_sample_overview.csv"
+FINAL_REGRESSION_TABLE = TABLES_DIR / "final_regression_table.csv"
+FINAL_SENTIMENT_RESULTS_SUMMARY_TABLE = (
+    TABLES_DIR / "final_sentiment_results_summary.csv"
+)
+RESEARCH_QUESTION_SUMMARY_TABLE = (
+    TABLES_DIR / "research_question_summary.csv"
+)
+FINAL_METHODOLOGICAL_LIMITATIONS_TABLE = (
+    TABLES_DIR / "final_methodological_limitations.csv"
+)
+ACTIVE_SCRIPT_INVENTORY_TABLE = TABLES_DIR / "active_script_inventory.csv"
+FINAL_REPRODUCIBILITY_AUDIT_FILE = (
+    DIAGNOSTICS_DIR / "final_reproducibility_audit.csv"
+)
+FINAL_RESULTS_REVIEW_FILE = OUTPUTS_DIR / "final_results_review.md"
+
 FINBERT_CHECKPOINT_DIR = REPOSITORY_ROOT / "checkpoints" / "finbert"
 MARKET_PRICES_FILE = PROCESSED_DATA_DIR / "market_prices.csv"
-ANALYSIS_DATASET_FILE = PROCESSED_DATA_DIR / "analysis_dataset.csv"
 MARKET_DATA_SUMMARY_FILE = DIAGNOSTICS_DIR / "market_data_summary.csv"
 
 MARKET_PRICE_FILES = {

@@ -239,6 +239,32 @@ The regression samples are concentrated in 2022. Phase 7 has been validated,
 reviewed, and approved by the researcher without a specification search or
 formal cross-market coefficient-equality test.
 
+Phase 7 is frozen at commit
+`b032fac7ea05cfa575669395cec983b72799fd47`. The five sentiment coefficients
+are not statistically significant under the approved specification; this does
+not authorize alternative specifications or a robustness search.
+
+## Final thesis-output consolidation
+
+Phase 8 is implemented in `src/13_build_final_thesis_outputs.py`. It verifies
+the frozen canonical hashes and consolidates existing evidence; it does not
+estimate or rerun an empirical model. Its principal outputs are:
+
+- `outputs/tables/final_thesis_output_manifest.csv`
+- `outputs/tables/final_sample_overview.csv`
+- `outputs/tables/final_regression_table.csv`
+- `outputs/tables/final_sentiment_results_summary.csv`
+- `outputs/tables/research_question_summary.csv`
+- `outputs/tables/final_methodological_limitations.csv`
+- `outputs/tables/active_script_inventory.csv`
+- `outputs/diagnostics/final_reproducibility_audit.csv`
+- `outputs/final_results_review.md`
+
+The frozen `outputs/tables/regression_results.csv` remains the authoritative
+machine-readable Phase 7 regression table. The Phase 8 regression table is a
+readability-oriented derivative containing coefficients, HAC standard errors,
+sample sizes, R-squared values, and the fixed maximum HAC lag.
+
 ## Methods intentionally excluded
 
 The final active methodology does **not** include:
@@ -261,7 +287,9 @@ The one-time descriptive-results backfill is implemented in
 implemented in `src/10_build_market_volatility.py`, and the approved Phase 6
 alignment is implemented in `src/11_build_trading_day_alignment.py`. The
 approved Phase 7 regressions are implemented in
-`src/12_run_hac_regressions.py`.
+`src/12_run_hac_regressions.py`. Final reporting consolidation and the
+reproducibility audit are implemented in
+`src/13_build_final_thesis_outputs.py`.
 
 ```text
 Master-thesis/
@@ -287,7 +315,8 @@ Master-thesis/
 │   ├── 09_build_descriptive_results.py
 │   ├── 10_build_market_volatility.py
 │   ├── 11_build_trading_day_alignment.py
-│   └── 12_run_hac_regressions.py
+│   ├── 12_run_hac_regressions.py
+│   └── 13_build_final_thesis_outputs.py
 ├── outputs/
 │   ├── figures/
 │   ├── tables/
@@ -297,7 +326,8 @@ Master-thesis/
     └── test_outputs/
 ```
 
-The repository is being refactored toward this structure. Legacy scripts and experimental outputs should be archived rather than immediately deleted.
+Legacy scripts and experimental outputs remain archived and are not part of
+the active numbered workflow.
 
 ## Thesis outputs
 
@@ -321,20 +351,30 @@ The repository is being refactored toward this structure. Legacy scripts and exp
 - p-values and confidence intervals
 - cross-market comparison of the lagged sentiment coefficient
 
-## Current development workflow
+## Active script order
 
-The repository is being cleaned and implemented in phases:
+Run the numbered scripts in order only when a full authorized reproduction is
+required:
 
-1. repository audit
-2. repository structure and cleanup
-3. market-data pipeline
-4. Reddit extraction and cleaning
-5. FinBERT scoring
-6. daily sentiment construction
-7. retrospective descriptive-results review for completed empirical phases
-8. GARCH modelling
-9. trading-day alignment and regression
-10. final thesis outputs and reproducibility checks
+1. `01_download_market_data.py` - market-price collection (network; frozen)
+2. `02_extract_reddit.py` - Reddit candidate extraction (network; frozen)
+3. `03_inspect_reddit_candidates.py` - candidate-corpus audit
+4. `04_validate_reddit_relevance.py` - initial relevance-rule dry run
+5. `05_compare_reddit_relevance_rules.py` - relevance-rule comparison
+6. `06_clean_reddit.py` - final cleaned and filtered Reddit corpus
+7. `07_score_finbert.py` - post-level FinBERT inference (expensive; frozen)
+8. `08_build_daily_sentiment.py` - complete calendar-day Reddit series
+9. `09_build_descriptive_results.py` - validated descriptive tables and figures
+10. `10_build_market_volatility.py` - returns and GARCH volatility (frozen)
+11. `11_build_trading_day_alignment.py` - market-specific mapping and lags (frozen)
+12. `12_run_hac_regressions.py` - five approved OLS-HAC regressions (frozen)
+13. `13_build_final_thesis_outputs.py` - deterministic Phase 8 consolidation and audit
+
+The full input/output and rerun guidance is recorded in
+`outputs/tables/active_script_inventory.csv`. In normal final-stage use, verify
+the frozen hashes and rerun only script 13. Do not redownload market or Reddit
+data, rerun FinBERT, or re-estimate frozen models merely to reproduce the final
+reporting package.
 
 An empirical phase is complete only after its canonical output, technical
 validation diagnostics, descriptive or thesis-facing tables, appropriate
@@ -350,7 +390,10 @@ The final repository should:
 - keep generated outputs outside the repository root;
 - avoid committing virtual environments and caches;
 - retain validation checks for data ranges, duplicates, probabilities, GARCH outputs, and regression inputs;
-- allow expensive steps such as Reddit extraction and FinBERT inference to be skipped when valid outputs already exist.
+- allow expensive steps such as Reddit extraction and FinBERT inference to be skipped when valid outputs already exist;
+- verify frozen Phase 4A, Phase 5, Phase 6, and Phase 7 hashes before Phase 8 consolidation;
+- record final repository and output checks in
+  `outputs/diagnostics/final_reproducibility_audit.csv`.
 
 ## Status
 
@@ -362,7 +405,10 @@ diagnostics, and figures under the repository's standard output directories.
 Phase 6 market-specific trading-day alignment and lag construction have been
 computed, validated, and approved by the researcher. The regression
 sample is conditional on observable prior-trading-day Reddit sentiment and is
-strongly concentrated in 2022. Phase 7's five separate OLS-HAC regressions
-have been computed, validated, reviewed, and approved by the researcher. No
+strongly concentrated in 2022. Phase 7's five separate OLS-HAC regressions have
+been computed, validated, reviewed, and approved by the researcher. No
 lagged-sentiment coefficient is statistically significant under the frozen
-specification. Phase 8 has not started.
+specification. Phase 8 final thesis-output consolidation, interpretation
+synthesis, and reproducibility audit have been performed without adding or
+rerunning an empirical model. The uncommitted Phase 8 working-tree changes
+remain subject to researcher review.

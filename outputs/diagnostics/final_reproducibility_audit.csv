@@ -1,0 +1,38 @@
+area,check,status,measured_value,expected_value,details
+frozen hashes,data/processed/reddit_posts_finbert.csv,PASS,2E4A693558197B8007F81C5D348362140524E3C31A8D31293F86D691DDB9C7FF,2E4A693558197B8007F81C5D348362140524E3C31A8D31293F86D691DDB9C7FF,
+frozen hashes,data/processed/market_returns_garch.csv,PASS,FFCF4D30CE1A064B04E726B67273204CF53CDBF1EE5696F1F727251966C425DE,FFCF4D30CE1A064B04E726B67273204CF53CDBF1EE5696F1F727251966C425DE,
+frozen hashes,data/processed/market_aligned_lagged.csv,PASS,1071A9E9BD7E9322F843EE3A60E331B111C70BA386D49E59F2FCC0AC38EA6A86,1071A9E9BD7E9322F843EE3A60E331B111C70BA386D49E59F2FCC0AC38EA6A86,
+frozen hashes,outputs/tables/regression_coefficients_long.csv,PASS,1853155F3540C55E6AE341515C8382E1DDDEED6D48F0139A75351FC131FF81D5,1853155F3540C55E6AE341515C8382E1DDDEED6D48F0139A75351FC131FF81D5,
+frozen hashes,outputs/tables/regression_results.csv,PASS,C23EB0938B065ADF7E100DD13D83A586E080FF179284FC968AC52058906CCFF7,C23EB0938B065ADF7E100DD13D83A586E080FF179284FC968AC52058906CCFF7,
+frozen hashes,outputs/tables/sentiment_coefficient_comparison.csv,PASS,D66DC053789F72FAA5FF07861727AC4EBAC8922553597ED75FAC5EAD922325AF,D66DC053789F72FAA5FF07861727AC4EBAC8922553597ED75FAC5EAD922325AF,
+frozen hashes,outputs/diagnostics/regression_model_validation.csv,PASS,C228C401CAA400AAAB779A6A5BD6EFB046747D6F5E0E17EA30ADDC53A69C786A,C228C401CAA400AAAB779A6A5BD6EFB046747D6F5E0E17EA30ADDC53A69C786A,
+frozen hashes,outputs/figures/sentiment_coefficient_comparison.png,PASS,BE7143105EF138E914C89A8087426EA3D2460BFBE30BB1B70CE7E8E7352B89C3,BE7143105EF138E914C89A8087426EA3D2460BFBE30BB1B70CE7E8E7352B89C3,
+paths,data/processed/market_prices.csv,PASS,True,True,
+paths,data/processed/reddit_posts_finbert.csv,PASS,True,True,
+paths,data/processed/market_returns_garch.csv,PASS,True,True,
+paths,data/processed/market_aligned_lagged.csv,PASS,True,True,
+paths,outputs/tables/reddit_sample_construction.csv,PASS,True,True,
+paths,outputs/tables/regression_coefficients_long.csv,PASS,True,True,
+paths,outputs/tables/regression_results.csv,PASS,True,True,
+market naming,exact approved market keys,PASS,CAC_40|DAX|EURO_STOXX_50|FTSE_100|WIG20,CAC_40|DAX|EURO_STOXX_50|FTSE_100|WIG20,
+market naming,WIG20 provenance,PASS,wig20|WIG20|Stooq|Internet Archive snapshot of Stooq,wig20|WIG20|Stooq|Internet Archive snapshot of Stooq,
+compilation,all active numbered scripts compile,PASS,13,13,
+requirements,all imported third-party packages declared,PASS,arch|langdetect|matplotlib|numpy|pandas|requests|statsmodels|torch|transformers|yfinance,arch|langdetect|matplotlib|numpy|pandas|requests|statsmodels|torch|transformers|yfinance,
+documentation,README and AGENTS describe completed Phase 8 workflow,PASS,True,True,
+archive separation,excluded empirical methods absent from scripts 01-12,PASS,,none,Historical files remain under archive/.
+archive separation,archive directory retained,PASS,True,True,
+Git hygiene,"environment, cache, secret, and checkpoint ignores",PASS,,none missing,
+Git hygiene,no obviously secret-bearing filenames tracked,PASS,,none,
+Git hygiene,"no environment, cache, or checkpoint artifacts tracked",PASS,,none,
+figure quality,daily_reddit_attention.png,PASS,3278x1417; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+figure quality,daily_reddit_sentiment.png,PASS,3277x1417; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+figure quality,finbert_label_distribution.png,PASS,2198x1413; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+figure quality,finbert_sentiment_score_distribution.png,PASS,2528x1417; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+figure quality,garch_conditional_volatility.png,PASS,3270x3262; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+figure quality,market_aligned_attention.png,PASS,3270x3262; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+figure quality,market_log_returns.png,PASS,3270x3262; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+figure quality,market_price_levels_qc.png,PASS,3278x2963; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+figure quality,reddit_sample_composition.png,PASS,3128x1249; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+figure quality,sentiment_coefficient_comparison.png,PASS,2442x1443; 300.0 DPI,at least 2000x1200 pixels; approximately 300 DPI,Visual clipping and label review completed during Phase 8.
+statistical interpretation,all sentiment confidence intervals include zero,PASS,0,0,
+statistical interpretation,approved four-negative/one-positive sign pattern,PASS,4,4,

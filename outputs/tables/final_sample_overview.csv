@@ -1,0 +1,47 @@
+group,market,metric,value,unit,denominator_or_sample,source_file,note
+Reddit sample,,Phase 3A candidates,3033.0,posts,broad validated candidate corpus,outputs/tables/reddit_sample_construction.csv,
+Reddit sample,,Final qualifying posts,1503.0,posts,final pooled three-subreddit sample,outputs/tables/finbert_post_sentiment_descriptives.csv,Each post receives equal weight.
+Reddit sample by year,,2021 posts,83.0,posts,"final 1,503-post Reddit sample",outputs/tables/reddit_sample_composition.csv,
+Reddit sample by year,,2022 posts,1197.0,posts,"final 1,503-post Reddit sample",outputs/tables/reddit_sample_composition.csv,
+Reddit sample by year,,2023 posts,223.0,posts,"final 1,503-post Reddit sample",outputs/tables/reddit_sample_composition.csv,
+Reddit sample by subreddit,,r/stocks,772.0,posts,"final 1,503-post Reddit sample",outputs/tables/reddit_sample_composition.csv,
+Reddit sample by subreddit,,r/StockMarket,433.0,posts,"final 1,503-post Reddit sample",outputs/tables/reddit_sample_composition.csv,
+Reddit sample by subreddit,,r/investing,298.0,posts,"final 1,503-post Reddit sample",outputs/tables/reddit_sample_composition.csv,
+FinBERT labels,,Positive labels,106.0,posts,"argmax descriptive labels in final 1,503-post sample",outputs/tables/finbert_post_sentiment_descriptives.csv,
+FinBERT labels,,Neutral labels,953.0,posts,"argmax descriptive labels in final 1,503-post sample",outputs/tables/finbert_post_sentiment_descriptives.csv,
+FinBERT labels,,Negative labels,444.0,posts,"argmax descriptive labels in final 1,503-post sample",outputs/tables/finbert_post_sentiment_descriptives.csv,
+Post-level sentiment,,Mean sentiment score,-0.13258174668151895,positive probability minus negative probability,"1,503 equally weighted posts",outputs/tables/finbert_post_sentiment_descriptives.csv,
+Calendar-day Reddit series,,Calendar days,1095.0,days,complete 2021-2023 calendar,outputs/tables/daily_reddit_descriptives.csv,
+Calendar-day Reddit series,,Populated sentiment days,504.0,days,"complete 1,095-day calendar",outputs/tables/daily_reddit_descriptives.csv,Days with at least one qualifying post.
+Calendar-day Reddit series,,Zero-post days,591.0,days,"complete 1,095-day calendar",outputs/tables/daily_reddit_descriptives.csv,Sentiment remains missing; zero posts are not neutral sentiment.
+Calendar-day Reddit series,,Populated-day mean sentiment,-0.10782156903129005,positive probability minus negative probability,504 equally weighted populated calendar days,outputs/tables/daily_reddit_descriptives.csv,This differs from the post-weighted mean because the weighting unit differs.
+Market data,EURO STOXX 50,Price observations,759.0,trading-date observations,actual market trading calendar,outputs/tables/market_price_coverage.csv,
+Market returns,EURO STOXX 50,Finite log returns,758.0,observations,within-market decimal log returns,outputs/tables/market_return_descriptives.csv,log_return is in decimal units.
+GARCH volatility,EURO STOXX 50,Finite conditional standard deviations,758.0,observations,"constant-mean GARCH(1,1)-Student-t output",outputs/tables/garch_volatility_descriptives.csv,garch_volatility is in percentage-return standard-deviation units.
+Trading-day alignment,EURO STOXX 50,Successfully mapped posts,1503.0,posts,post-level FinBERT observations mapped for this market,outputs/tables/trading_day_mapping_reconciliation.csv,Mapping is to the same or next actual trading day.
+Trading-day alignment,EURO STOXX 50,Zero-attention trading days,356.0,trading days,759 actual trading days,outputs/tables/trading_day_coverage.csv,"Sentiment is missing, not zero, on these trading days."
+Phase 7 eligible sample,EURO STOXX 50,Regression observations,401.0,observations,complete approved Phase 7 variables,outputs/tables/alignment_sample_sizes.csv,Conditional on observed prior-aligned-trading-day sentiment.
+Market data,DAX,Price observations,767.0,trading-date observations,actual market trading calendar,outputs/tables/market_price_coverage.csv,
+Market returns,DAX,Finite log returns,766.0,observations,within-market decimal log returns,outputs/tables/market_return_descriptives.csv,log_return is in decimal units.
+GARCH volatility,DAX,Finite conditional standard deviations,766.0,observations,"constant-mean GARCH(1,1)-Student-t output",outputs/tables/garch_volatility_descriptives.csv,garch_volatility is in percentage-return standard-deviation units.
+Trading-day alignment,DAX,Successfully mapped posts,1503.0,posts,post-level FinBERT observations mapped for this market,outputs/tables/trading_day_mapping_reconciliation.csv,Mapping is to the same or next actual trading day.
+Trading-day alignment,DAX,Zero-attention trading days,359.0,trading days,767 actual trading days,outputs/tables/trading_day_coverage.csv,"Sentiment is missing, not zero, on these trading days."
+Phase 7 eligible sample,DAX,Regression observations,406.0,observations,complete approved Phase 7 variables,outputs/tables/alignment_sample_sizes.csv,Conditional on observed prior-aligned-trading-day sentiment.
+Market data,CAC 40,Price observations,770.0,trading-date observations,actual market trading calendar,outputs/tables/market_price_coverage.csv,
+Market returns,CAC 40,Finite log returns,769.0,observations,within-market decimal log returns,outputs/tables/market_return_descriptives.csv,log_return is in decimal units.
+GARCH volatility,CAC 40,Finite conditional standard deviations,769.0,observations,"constant-mean GARCH(1,1)-Student-t output",outputs/tables/garch_volatility_descriptives.csv,garch_volatility is in percentage-return standard-deviation units.
+Trading-day alignment,CAC 40,Successfully mapped posts,1503.0,posts,post-level FinBERT observations mapped for this market,outputs/tables/trading_day_mapping_reconciliation.csv,Mapping is to the same or next actual trading day.
+Trading-day alignment,CAC 40,Zero-attention trading days,361.0,trading days,770 actual trading days,outputs/tables/trading_day_coverage.csv,"Sentiment is missing, not zero, on these trading days."
+Phase 7 eligible sample,CAC 40,Regression observations,407.0,observations,complete approved Phase 7 variables,outputs/tables/alignment_sample_sizes.csv,Conditional on observed prior-aligned-trading-day sentiment.
+Market data,FTSE 100,Price observations,754.0,trading-date observations,actual market trading calendar,outputs/tables/market_price_coverage.csv,
+Market returns,FTSE 100,Finite log returns,753.0,observations,within-market decimal log returns,outputs/tables/market_return_descriptives.csv,log_return is in decimal units.
+GARCH volatility,FTSE 100,Finite conditional standard deviations,753.0,observations,"constant-mean GARCH(1,1)-Student-t output",outputs/tables/garch_volatility_descriptives.csv,garch_volatility is in percentage-return standard-deviation units.
+Trading-day alignment,FTSE 100,Successfully mapped posts,1503.0,posts,post-level FinBERT observations mapped for this market,outputs/tables/trading_day_mapping_reconciliation.csv,Mapping is to the same or next actual trading day.
+Trading-day alignment,FTSE 100,Zero-attention trading days,355.0,trading days,754 actual trading days,outputs/tables/trading_day_coverage.csv,"Sentiment is missing, not zero, on these trading days."
+Phase 7 eligible sample,FTSE 100,Regression observations,397.0,observations,complete approved Phase 7 variables,outputs/tables/alignment_sample_sizes.csv,Conditional on observed prior-aligned-trading-day sentiment.
+Market data,WIG20,Price observations,752.0,trading-date observations,actual market trading calendar,outputs/tables/market_price_coverage.csv,
+Market returns,WIG20,Finite log returns,751.0,observations,within-market decimal log returns,outputs/tables/market_return_descriptives.csv,log_return is in decimal units.
+GARCH volatility,WIG20,Finite conditional standard deviations,751.0,observations,"constant-mean GARCH(1,1)-Student-t output",outputs/tables/garch_volatility_descriptives.csv,garch_volatility is in percentage-return standard-deviation units.
+Trading-day alignment,WIG20,Successfully mapped posts,1503.0,posts,post-level FinBERT observations mapped for this market,outputs/tables/trading_day_mapping_reconciliation.csv,Mapping is to the same or next actual trading day.
+Trading-day alignment,WIG20,Zero-attention trading days,348.0,trading days,752 actual trading days,outputs/tables/trading_day_coverage.csv,"Sentiment is missing, not zero, on these trading days."
+Phase 7 eligible sample,WIG20,Regression observations,402.0,observations,complete approved Phase 7 variables,outputs/tables/alignment_sample_sizes.csv,Conditional on observed prior-aligned-trading-day sentiment.

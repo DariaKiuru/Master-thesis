@@ -1,0 +1,14 @@
+script,phase,primary_input,primary_output,deterministic_and_inexpensive,depends_on_network_access,frozen,normally_rerun
+01_download_market_data.py,Phase 2,Remote Yahoo Finance and archived/live Stooq responses,data/processed/market_prices.csv,No - network collection,Yes,Yes,No; verify the frozen output instead
+02_extract_reddit.py,Phase 3A,Arctic Shift historical Reddit API,data/raw/reddit/reddit_posts_2021_2023_raw.csv,No - network collection,Yes,Yes,No; verify the frozen corpus instead
+03_inspect_reddit_candidates.py,Phase 3A audit,data/raw/reddit/reddit_posts_2021_2023_raw.csv,outputs/diagnostics/reddit_candidate_corpus_profile.csv,Yes,No,Yes,Only when reproducing the frozen candidate audit
+04_validate_reddit_relevance.py,Phase 3B.2,Frozen Phase 3A candidate corpus,outputs/diagnostics/reddit_relevance_filter_dry_run.csv,Yes,No,Yes,Only when reproducing the historical rule-validation audit
+05_compare_reddit_relevance_rules.py,Phase 3B.3,Frozen candidates and Phase 3B.2 dry run,outputs/diagnostics/reddit_relevance_rule_comparison.csv,Yes,No,Yes,Only when reproducing the historical rule comparison
+06_clean_reddit.py,Phase 3B final,data/raw/reddit/reddit_posts_2021_2023_raw.csv,data/processed/reddit_posts_cleaned.csv,Yes,No,Yes,No; verify the frozen cleaned corpus
+07_score_finbert.py,Phase 4A,data/processed/reddit_posts_cleaned.csv,data/processed/reddit_posts_finbert.csv,No - computationally expensive,Conditional first-time model download,Yes,No; validated output is skipped when present
+08_build_daily_sentiment.py,Phase 4B,data/processed/reddit_posts_finbert.csv,data/processed/daily_reddit_sentiment.csv,Yes,No,Yes,Only for an explicit frozen-stage reproduction
+09_build_descriptive_results.py,Phase 4C,"Frozen market, cleaned Reddit, FinBERT, and daily files","Phase 4C tables, diagnostics, and figures under outputs/",Yes,No,Yes,Only for an explicit frozen-stage reproduction
+10_build_market_volatility.py,Phase 5,data/processed/market_prices.csv,data/processed/market_returns_garch.csv,Yes - moderate GARCH estimation,No,Yes,No; verify the frozen Phase 5 hash
+11_build_trading_day_alignment.py,Phase 6,Post-level FinBERT scores and frozen Phase 5 market panel,data/processed/market_aligned_lagged.csv,Yes,No,Yes,No; verify the frozen Phase 6 hash
+12_run_hac_regressions.py,Phase 7,data/processed/market_aligned_lagged.csv,outputs/tables/regression_coefficients_long.csv,Yes,No,Yes,No; verify the frozen Phase 7 hashes
+13_build_final_thesis_outputs.py,Phase 8,Frozen reporting tables and diagnostics from Phases 2-7,"Final synthesis tables, manifest, audit, and review note",Yes,No,No - reporting only,"Yes, to reproduce the final reporting package"

@@ -1,0 +1,11 @@
+limitation_id,limitation,evidence,implication
+1,Reddit sample scope,"The sample pools r/investing, r/stocks, and r/StockMarket.","Sentiment reflects selected finance-oriented Reddit communities, not all investors."
+2,Temporal concentration,79.6% of final Reddit posts occur in 2022.,The corpus is concentrated in the crisis's central year.
+3,Calendar sparsity,"591 of 1,095 calendar days have no qualifying posts.","Zero-post-day sentiment remains missing, not neutral."
+4,Regression-sample selection,"Phase 7 uses 397-407 observations per market, retaining 52.7%-53.5% of finite-volatility rows.",Inference pertains to the approved eligible samples rather than every finite-volatility trading day.
+5,Conditional observability,Eligibility requires nonmissing sentiment on the preceding aligned trading day.,The regression sample is conditional on qualifying Reddit sentiment being observed.
+6,Attention support,The minimum attention_lag1 in every eligible sample is 1; no eligible row has zero prior-day attention.,"Attention measures discussion intensity conditional on discussion occurring, not zero versus positive discussion."
+7,Regression-year concentration,2022 supplies 55.2%-55.5% of each market's estimation observations.,The estimation samples are concentrated in 2022.
+8,Observational design,Predictors are lagged within the market trading calendar.,Lagging variables does not establish structural causation.
+9,Sentiment measurement,ProsusAI/finbert is applied as a pretrained model without thesis-specific fine-tuning.,The sentiment measure inherits the model's domain limits.
+10,Market-specific estimates,"Point estimates differ, but no coefficient-equality test was part of the frozen design.",The observed differences should not be described as formally established heterogeneity.
