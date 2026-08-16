@@ -195,7 +195,8 @@ market-specific aggregation is merged onto the complete market panel.
 rates are approximately 52.7% to 53.5% of finite-volatility rows because prior
 trading-day sentiment is structurally missing when no qualifying post was
 mapped to that day. Phase 6 has been reviewed and approved without changing
-the frozen methodology; no regression has been estimated.
+the frozen methodology. Phase 6 is frozen at commit
+`d69ea18acdedd042efe3edc113fce3e593de7031`.
 
 ## Regression specification
 
@@ -218,6 +219,26 @@ The coefficient on `sentiment_lag1` is the main coefficient of interest.
 
 Because higher sentiment values indicate more positive sentiment, H1 predicts a negative sentiment coefficient.
 
+The Phase 7 implementation is `src/12_run_hac_regressions.py`. It estimates
+exactly one intercept-including OLS model per market with
+`garch_volatility` as the dependent variable and `sentiment_lag1`,
+`attention_lag1`, `volatility_lag1`, and decimal `return_lag1` as regressors.
+Reported inference uses HAC/Newey-West standard errors with maximum lag 5.
+The approved sample sizes are 401 observations for EURO STOXX 50, 406 for DAX,
+407 for CAC 40, 397 for FTSE 100, and 402 for WIG20. The design is
+associational; lagging predictors does not establish causality.
+
+The lagged-sentiment point estimate is negative for EURO STOXX 50, DAX, CAC 40,
+and FTSE 100 and positive for WIG20. All five 95% confidence intervals include
+zero, so none of the sentiment coefficients is statistically significant under
+the frozen specification. Because eligibility requires observable prior-day
+sentiment, every eligible observation has positive `attention_lag1`; the
+attention coefficient therefore describes variation in discussion intensity
+conditional on discussion being observed, not zero versus positive discussion.
+The regression samples are concentrated in 2022. Phase 7 has been validated,
+reviewed, and approved by the researcher without a specification search or
+formal cross-market coefficient-equality test.
+
 ## Methods intentionally excluded
 
 The final active methodology does **not** include:
@@ -237,9 +258,10 @@ The validated upstream empirical pipeline is
 including the intermediate Reddit inspection and relevance-validation scripts.
 The one-time descriptive-results backfill is implemented in
 `src/09_build_descriptive_results.py`, Phase 5 return/GARCH construction is
-implemented in `src/10_build_market_volatility.py`, and the reviewable Phase 6
-alignment is implemented in `src/11_build_trading_day_alignment.py`. Regression
-has not started.
+implemented in `src/10_build_market_volatility.py`, and the approved Phase 6
+alignment is implemented in `src/11_build_trading_day_alignment.py`. The
+approved Phase 7 regressions are implemented in
+`src/12_run_hac_regressions.py`.
 
 ```text
 Master-thesis/
@@ -264,7 +286,8 @@ Master-thesis/
 │   ├── 08_build_daily_sentiment.py
 │   ├── 09_build_descriptive_results.py
 │   ├── 10_build_market_volatility.py
-│   └── 11_build_trading_day_alignment.py
+│   ├── 11_build_trading_day_alignment.py
+│   └── 12_run_hac_regressions.py
 ├── outputs/
 │   ├── figures/
 │   ├── tables/
@@ -337,6 +360,9 @@ returns and the five constant-mean GARCH(1,1)-Student-t models have been compute
 validated, and approved by the researcher, with canonical data, tables,
 diagnostics, and figures under the repository's standard output directories.
 Phase 6 market-specific trading-day alignment and lag construction have been
-computed, validated, and approved by the researcher. The future regression
+computed, validated, and approved by the researcher. The regression
 sample is conditional on observable prior-trading-day Reddit sentiment and is
-strongly concentrated in 2022. Regression has not started.
+strongly concentrated in 2022. Phase 7's five separate OLS-HAC regressions
+have been computed, validated, reviewed, and approved by the researcher. No
+lagged-sentiment coefficient is statistically significant under the frozen
+specification. Phase 8 has not started.

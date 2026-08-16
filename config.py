@@ -535,6 +535,27 @@ MARKET_ALIGNED_ATTENTION_FIGURE = (
     FIGURES_DIR / "market_aligned_attention.png"
 )
 
+# Phase 7 five separate OLS-HAC sentiment-volatility regressions.
+REGRESSION_COEFFICIENTS_LONG_TABLE = (
+    TABLES_DIR / "regression_coefficients_long.csv"
+)
+REGRESSION_RESULTS_TABLE = TABLES_DIR / "regression_results.csv"
+SENTIMENT_COEFFICIENT_COMPARISON_TABLE = (
+    TABLES_DIR / "sentiment_coefficient_comparison.csv"
+)
+REGRESSION_SAMPLE_DESCRIPTIVES_TABLE = (
+    TABLES_DIR / "regression_sample_descriptives.csv"
+)
+REGRESSION_SAMPLE_YEAR_COMPOSITION_TABLE = (
+    TABLES_DIR / "regression_sample_year_composition.csv"
+)
+REGRESSION_MODEL_VALIDATION_FILE = (
+    DIAGNOSTICS_DIR / "regression_model_validation.csv"
+)
+SENTIMENT_COEFFICIENT_COMPARISON_FIGURE = (
+    FIGURES_DIR / "sentiment_coefficient_comparison.png"
+)
+
 FINBERT_CHECKPOINT_DIR = REPOSITORY_ROOT / "checkpoints" / "finbert"
 MARKET_PRICES_FILE = PROCESSED_DATA_DIR / "market_prices.csv"
 ANALYSIS_DATASET_FILE = PROCESSED_DATA_DIR / "analysis_dataset.csv"
