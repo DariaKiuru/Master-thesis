@@ -1,4 +1,23 @@
-"""Profile the Phase 3A Reddit corpus and create a manual-review sample."""
+"""Phase 3B.1 audit: profile Reddit candidates for manual relevance review.
+
+Why this phase exists
+    Before fixing a relevance rule, the researcher needs a transparent view of
+    the broad Phase 3A corpus and a reproducible sample of posts to inspect.
+
+Main input
+    The immutable 3,033-post Phase 3A candidate corpus.
+
+Main outputs
+    ``reddit_candidate_corpus_profile.csv`` and the fixed-seed 150-post
+    ``reddit_relevance_review_sample.csv`` under ``outputs/diagnostics``.
+
+Methodological rules and boundaries
+    The sample spans all three years, all three finance subreddits, extraction
+    terms, and useful review categories while preserving title and selftext.
+    Context indicators in this audit are descriptive aids only. This script
+    neither decides final relevance nor creates a cleaned or sentiment-scored
+    empirical sample.
+"""
 
 from __future__ import annotations
 
@@ -63,6 +82,10 @@ CONTEXT_PATTERNS = {
     for term in DIAGNOSTIC_CONTEXT_TERMS
 }
 
+
+# ---------------------------------------------------------------------------
+# Validate the immutable candidate corpus and derive review-only indicators
+# ---------------------------------------------------------------------------
 
 def file_sha256(path: Path) -> str:
     """Return a source-file checksum so the inspection cannot alter it silently."""
@@ -354,7 +377,11 @@ def build_review_sample(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def validate_review_sample(sample: pd.DataFrame) -> None:
-    """Confirm sample size, provenance coverage, and raw text preservation."""
+    """Confirm sample size, provenance coverage, and raw text preservation.
+
+    Coverage checks make the manual review informative across years,
+    subreddits, and extraction paths without changing corpus membership.
+    """
 
     if len(sample) != REVIEW_SAMPLE_SIZE or sample["id"].duplicated().any():
         raise ValueError("Manual-review sample must contain 150 unique posts.")

@@ -1,4 +1,26 @@
-"""Build retrospective descriptive results from frozen validated datasets."""
+"""Phase 4C reporting: create descriptive tables and figures from frozen data.
+
+Why this phase exists
+    Earlier validated collection, cleaning, FinBERT, daily aggregation, and
+    market-price stages need thesis-facing descriptive evidence and technical
+    diagnostics in a consistent output structure.
+
+Main inputs
+    Frozen market prices, the final 1,503-post cleaned and FinBERT datasets,
+    the complete calendar-day Reddit series, and their source diagnostics.
+
+Main outputs
+    Sample-construction/composition, FinBERT, daily Reddit, weighting, and
+    market-coverage tables; descriptive diagnostics; and six figures under
+    ``outputs/tables``, ``outputs/diagnostics``, and ``outputs/figures``.
+
+Methodological rules and boundaries
+    Hash and reconciliation checks protect the approved empirical variables.
+    Post-weighted and populated-day-weighted summaries are labelled separately;
+    missing no-post sentiment remains missing. This script reports existing
+    results only: it does not re-clean posts, rerun FinBERT, calculate returns,
+    estimate GARCH/regressions, or introduce an alternative sentiment index.
+"""
 
 from __future__ import annotations
 
@@ -98,6 +120,10 @@ FIGURE_DPI = 300
 EXTREME_ROWS_PER_GROUP = 10
 
 
+# ---------------------------------------------------------------------------
+# Load and reconcile the frozen pre-GARCH empirical inputs
+# ---------------------------------------------------------------------------
+
 def file_sha256(path: Path) -> str:
     """Return an uppercase SHA-256 digest for one file."""
 
@@ -109,7 +135,11 @@ def file_sha256(path: Path) -> str:
 
 
 def validate_input_hashes() -> dict[str, str]:
-    """Stop before reporting if any canonical empirical input has changed."""
+    """Stop before reporting if any canonical empirical input has changed.
+
+    These hashes make the reporting backfill reproducible: descriptive output
+    cannot silently be built from a different cleaned, sentiment, or price file.
+    """
 
     observed: dict[str, str] = {}
     for path, expected_hash in EXPECTED_INPUT_HASHES.items():
@@ -849,7 +879,11 @@ def build_weighting_comparison(
     finbert: pd.DataFrame,
     daily: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Report the two requested means without changing daily sentiment."""
+    """Report post-weighted and populated-day-weighted means without replacing either.
+
+    The two statistics use different denominators and are presented only to
+    clarify weighting; no alternative sentiment index is constructed.
+    """
 
     observed_daily = daily["sentiment"].dropna()
     return pd.DataFrame(
@@ -1277,6 +1311,8 @@ def validate_generated_outputs(paths: list[Path]) -> None:
 def main() -> None:
     """Generate tables and figures without changing any empirical dataset."""
 
+    # Validation precedes every table or figure so reporting cannot conceal a
+    # changed frozen input or a broken sample/probability reconciliation.
     hashes_before = validate_input_hashes()
     inputs = load_inputs()
     validate_cleaned(inputs["cleaned"])

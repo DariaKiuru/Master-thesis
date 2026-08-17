@@ -1,4 +1,26 @@
-"""Extract and validate the Phase 3A raw candidate Reddit corpus."""
+"""Phase 3A: extract the broad Reddit candidate corpus for later screening.
+
+Why this phase exists
+    Relevant Ukraine-war financial posts must first be retrieved broadly so
+    that the narrower, transparent relevance rule can be reviewed separately.
+
+Main inputs
+    Arctic Shift historical Reddit posts for r/investing, r/stocks, and
+    r/StockMarket, searched by the configured candidate keywords during
+    2021-01-01 through 2023-12-31.
+
+Main outputs
+    Checkpoint files for recoverable extraction, the deduplicated raw corpus
+    ``data/raw/reddit/reddit_posts_2021_2023_raw.csv``, and extraction/query
+    diagnostics under ``outputs/diagnostics``.
+
+Methodological rules and boundaries
+    Title and selftext are retained as source fields, every Reddit ID appears
+    once after global deduplication, and keyword provenance is recorded. These
+    broad search terms are not the final Ukraine-war financial relevance rule.
+    This script does not clean language, select the final 1,503 posts, or run
+    FinBERT. It is a frozen network-collection stage and is not normally rerun.
+"""
 
 from __future__ import annotations
 
@@ -101,6 +123,10 @@ KEYWORD_PATTERNS = {
     for keyword in REDDIT_EXTRACTION_KEYWORDS
 }
 
+
+# ---------------------------------------------------------------------------
+# Define and validate the approved extraction universe
+# ---------------------------------------------------------------------------
 
 def parse_arguments() -> argparse.Namespace:
     """Parse scope, resume, and validation options."""
@@ -627,7 +653,11 @@ def fetch_complete_window(
     resume: bool = False,
     split_depth: int = 0,
 ) -> list[dict[str, Any]]:
-    """Retrieve one complete interval, splitting caps and persistent 422 timeouts."""
+    """Retrieve one complete interval, splitting caps and persistent 422 timeouts.
+
+    Adaptive splitting prevents the API's row limit or a persistent timeout
+    from silently omitting part of a subreddit-keyword-year search window.
+    """
 
     key = checkpoint_key(subreddit, query_text, window_start, window_end)
     previous = (checkpoint_index or {}).get(key) if resume else None
@@ -914,7 +944,11 @@ def first_non_missing(values: pd.Series) -> Any:
 def deduplicate_posts(
     posts: list[dict[str, Any]], extracted_at_utc: str
 ) -> pd.DataFrame:
-    """Deduplicate globally by post ID and union locally matched keywords."""
+    """Deduplicate globally by post ID and union locally matched keywords.
+
+    A post found by several search terms remains one empirical candidate; its
+    locally verified keyword matches are combined as extraction provenance.
+    """
 
     if not posts:
         raise ValueError("No Reddit posts were supplied for final deduplication.")
@@ -983,7 +1017,11 @@ def text_counts(data: pd.DataFrame) -> dict[str, int]:
 
 
 def validate_raw_dataset(data: pd.DataFrame) -> None:
-    """Apply Phase 3A final-corpus validation checks."""
+    """Apply Phase 3A final-corpus validation checks.
+
+    Globally unique IDs prevent later double counting, while UTC timestamps
+    and sample-bound checks keep every candidate in the stated thesis period.
+    """
 
     if data.empty or list(data.columns) != RAW_OUTPUT_COLUMNS:
         raise ValueError("The raw Reddit dataset is empty or has an unexpected schema.")

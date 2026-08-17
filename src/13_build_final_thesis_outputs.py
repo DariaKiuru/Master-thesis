@@ -1,4 +1,26 @@
-"""Consolidate frozen Phases 2-7 into the final Phase 8 evidence package."""
+"""Phase 8: consolidate frozen empirical evidence into final thesis outputs.
+
+Why this phase exists
+    Validated results from Phases 2-7 need one deterministic, researcher-facing
+    package that connects sample construction, descriptives, GARCH estimates,
+    regressions, research questions, limitations, and reproducibility checks.
+
+Main inputs
+    Frozen canonical data, tables, diagnostics, and figures from Phases 2-7,
+    especially the authoritative Phase 7 ``regression_results.csv``.
+
+Main outputs
+    Final sample and regression tables, sentiment/RQ/H1 summaries, limitations,
+    the output manifest, active-script inventory, reproducibility audit, and
+    ``outputs/final_results_review.md``.
+
+Methodological rules and boundaries
+    Frozen hashes are verified before synthesis, Phase 7 numeric results are
+    reproduced exactly, and sample denominators and units remain explicit.
+    This reporting phase does not estimate a model, rerun FinBERT or GARCH,
+    impute missing sentiment, create a new index/specification, conduct a
+    robustness search, or convert statistical association into causal evidence.
+"""
 
 from __future__ import annotations
 
@@ -100,6 +122,12 @@ EXPECTED_REGRESSION_N = {
     "FTSE_100": 397,
     "WIG20": 402,
 }
+
+
+# ---------------------------------------------------------------------------
+# Load and validate the frozen evidence used by final reporting
+# ---------------------------------------------------------------------------
+
 def file_sha256(path: Path) -> str:
     """Return an uppercase SHA-256 digest."""
 
@@ -183,7 +211,11 @@ def read_sources() -> dict[str, pd.DataFrame]:
 
 
 def validate_frozen_state() -> dict[str, str]:
-    """Stop immediately if any frozen empirical artifact differs."""
+    """Stop immediately if any frozen empirical artifact differs.
+
+    Hash identity protects the final synthesis from silently reporting results
+    produced by a different post sample, volatility panel, or regression run.
+    """
 
     measured: dict[str, str] = {}
     for path, expected in EXPECTED_FROZEN_HASHES.items():
@@ -467,7 +499,11 @@ def build_sample_overview(sources: dict[str, pd.DataFrame]) -> pd.DataFrame:
 
 
 def build_final_regression_table(sources: dict[str, pd.DataFrame]) -> pd.DataFrame:
-    """Format the frozen coefficient table without recalculating a model."""
+    """Format frozen coefficients and inference without recalculating a model.
+
+    Coefficients, HAC standard errors, p-values, confidence intervals, and N
+    are copied from the authoritative Phase 7 evidence and then reconciled.
+    """
 
     coefficients = sources["coefficients"].copy()
     terms = [
@@ -1073,7 +1109,11 @@ def build_reproducibility_audit(
     measured_hashes: dict[str, str],
     sources: dict[str, pd.DataFrame],
 ) -> pd.DataFrame:
-    """Run inexpensive repository, path, figure, and hygiene checks."""
+    """Run inexpensive repository, path, figure, and hygiene checks.
+
+    The audit verifies frozen hashes, expected files, script compilation,
+    tracked-path hygiene, and figure metadata without rerunning empirical work.
+    """
 
     rows: list[dict[str, Any]] = []
 
@@ -1530,6 +1570,8 @@ def validate_new_outputs(
 def main() -> None:
     """Build final reporting artifacts without rerunning any empirical model."""
 
+    # Phase 8 is allowed to format and synthesize only the already-approved
+    # evidence. Hash verification is therefore the first empirical gate.
     measured_hashes = validate_frozen_state()
     sources = read_sources()
     validate_sources(sources)

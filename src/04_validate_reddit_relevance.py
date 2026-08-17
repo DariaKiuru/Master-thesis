@@ -1,4 +1,24 @@
-"""Dry-run and validate the transparent Phase 3B Reddit relevance rule."""
+"""Phase 3B.2 audit: dry-run the first transparent Reddit relevance rule.
+
+Why this phase exists
+    Broad keyword extraction includes incidental geopolitical mentions. This
+    stage makes the proposed Ukraine-war financial inclusion logic observable
+    post by post so it can be checked before final sample construction.
+
+Main input
+    The immutable 3,033-post Phase 3A candidate corpus and configured context
+    vocabularies.
+
+Main outputs
+    A full dry-run decision file plus deterministic included/excluded review
+    samples under ``outputs/diagnostics``.
+
+Methodological rules and boundaries
+    Title and available selftext are evaluated with bounded term matching.
+    Generic oil, gas, energy, inflation, or recession language is not enough
+    without the required Ukraine/Russia-conflict connection. This is an audit
+    only: it does not create the final cleaned corpus or run sentiment scoring.
+"""
 
 from __future__ import annotations
 
@@ -114,6 +134,10 @@ SANCTIONS_INVASION_PATTERN = compile_term_pattern(
     ]
 )
 
+
+# ---------------------------------------------------------------------------
+# Load the frozen candidates and apply the reviewable Boolean rule
+# ---------------------------------------------------------------------------
 
 def validate_configuration() -> None:
     """Check required vocabularies and the fixed thesis sample definition."""
@@ -277,7 +301,11 @@ def apply_candidate_rule(raw: pd.DataFrame) -> pd.DataFrame:
 
 
 def validate_rule(raw: pd.DataFrame, data: pd.DataFrame) -> None:
-    """Validate provenance correction, usable text, and exact Boolean logic."""
+    """Validate provenance correction, usable text, and exact Boolean logic.
+
+    These checks ensure the dry run preserves source text and implements the
+    documented inclusion paths rather than an unintended keyword shortcut.
+    """
 
     if len(data) != len(raw) or not data["id"].equals(raw["id"]):
         raise ValueError("The dry run changed the raw corpus membership or order.")

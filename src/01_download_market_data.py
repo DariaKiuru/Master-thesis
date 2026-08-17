@@ -1,4 +1,24 @@
-"""Download and validate closing levels for the five thesis markets."""
+"""Phase 2: collect and validate the five European equity-index series.
+
+Why this phase exists
+    The return and GARCH stages require one trustworthy closing-level series
+    for each market over the common 2021-2023 thesis period.
+
+Main inputs
+    Remote Yahoo Finance data for EURO STOXX 50, DAX, CAC 40, and FTSE 100;
+    Stooq symbol ``wig20`` for WIG20, with the validated archived January 2025
+    Stooq response as the documented fallback.
+
+Main outputs
+    Source-specific CSV files, ``data/processed/market_prices.csv``, and the
+    market-data provenance/quality summary under ``outputs/diagnostics``.
+
+Methodological rules and boundaries
+    Yahoo adjusted closes and the Stooq daily Close field are standardized as
+    ``close_level``. The script checks positive prices, unique market dates,
+    source identity, and sample coverage. It does not calculate returns,
+    estimate GARCH models, or use WIG20.WA/GPW.WA as a proxy for WIG20.
+"""
 
 from __future__ import annotations
 
@@ -52,6 +72,10 @@ SUMMARY_COLUMNS = [
 REQUEST_TIMEOUT_SECONDS = 60
 STOOQ_API_KEY_ENVIRONMENT_VARIABLE = "STOOQ_API_KEY"
 
+
+# ---------------------------------------------------------------------------
+# Validate sources and standardize all prices to the common schema
+# ---------------------------------------------------------------------------
 
 def exclusive_download_end(end_date: str) -> str:
     """Return the day after the inclusive thesis end date for yfinance."""
@@ -188,7 +212,11 @@ def validate_index_data(
     ticker: str,
     data_source: str,
 ) -> None:
-    """Validate one standardized market-price series."""
+    """Validate one standardized market-price series.
+
+    Unique, ordered dates prevent duplicated trading observations; positive
+    finite close levels are required before logarithmic returns can be formed.
+    """
 
     if data.empty:
         raise ValueError(f"{index_name} ({ticker}) contains no observations.")
@@ -296,6 +324,8 @@ def download_stooq_wig20() -> tuple[pd.DataFrame, str | None]:
     if api_key:
         params["apikey"] = api_key
 
+    # The archived response is still Stooq-produced data. The fallback keeps
+    # that provenance explicit when the live endpoint returns browser HTML.
     fallback_warning = None
     try:
         downloaded = request_stooq_csv(STOOQ_DOWNLOAD_URL, params=params)
@@ -340,6 +370,10 @@ def build_quality_summary(market_data: dict[str, pd.DataFrame]) -> pd.DataFrame:
         )
     return pd.DataFrame(rows, columns=SUMMARY_COLUMNS)
 
+
+# ---------------------------------------------------------------------------
+# Reconcile the five-market panel and write canonical Phase 2 outputs
+# ---------------------------------------------------------------------------
 
 def validate_long_market_data(data: pd.DataFrame) -> None:
     """Validate the combined five-market long dataset."""

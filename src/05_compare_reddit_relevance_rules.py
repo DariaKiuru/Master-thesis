@@ -1,4 +1,23 @@
-"""Compare the Phase 3B.2 Reddit relevance rule with its Phase 3B.3 refinement."""
+"""Phase 3B.3 audit: compare the initial and refined relevance rules.
+
+Why this phase exists
+    Manual review of Phase 3B.2 motivated a narrowly refined rule. A direct
+    comparison identifies every changed decision before the final filter is
+    frozen, rather than silently replacing the earlier audit.
+
+Main inputs
+    The immutable Phase 3A candidate corpus and Phase 3B.2 dry-run decisions.
+
+Main outputs
+    A post-level old-versus-new comparison and deterministic samples of newly
+    included or excluded posts under ``outputs/diagnostics``.
+
+Methodological rules and boundaries
+    Both decisions retain their transparent relevance paths, source title/body
+    text remains unchanged, and generic Russian asset or commodity language is
+    not independently sufficient. This audit does not create the final cleaned
+    corpus, perform language screening, or run FinBERT.
+"""
 
 from __future__ import annotations
 
@@ -85,6 +104,10 @@ KNOWN_CASES = {
     "li0rpg": "long company DD with incidental geopolitics",
 }
 
+
+# ---------------------------------------------------------------------------
+# Reproduce the audited baseline and apply the refined rule beside it
+# ---------------------------------------------------------------------------
 
 def file_sha256(path: Path) -> str:
     """Return a checksum proving that the Phase 3A corpus was not modified."""
@@ -321,7 +344,11 @@ def build_comparison(raw: pd.DataFrame, old: pd.DataFrame) -> pd.DataFrame:
 
 
 def validate_comparison(raw: pd.DataFrame, data: pd.DataFrame) -> None:
-    """Validate provenance, source preservation, baseline, and refined logic."""
+    """Validate provenance, source preservation, baseline, and refined logic.
+
+    Reconciliation to all 3,033 unique IDs ensures that a rule comparison does
+    not accidentally add, omit, or duplicate candidate observations.
+    """
 
     if len(data) != EXPECTED_POSTS or data["id"].duplicated().any():
         raise ValueError("Comparison must contain all 3,033 unique posts.")

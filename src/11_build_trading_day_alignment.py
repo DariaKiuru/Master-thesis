@@ -1,4 +1,27 @@
-"""Build Phase 6 market-specific Reddit alignment and trading-row lags."""
+"""Phase 6: align post-level Reddit sentiment to each market's trading days.
+
+Why this phase exists
+    Reddit discussion occurs every calendar day, whereas the regression uses
+    each exchange's actual sequence of market observations. Timing must be
+    resolved before lagged predictors are created.
+
+Main inputs
+    The frozen 1,503-row post-level FinBERT file and frozen Phase 5 market/GARCH
+    panel. The calendar-day Reddit file is loaded only to audit descriptives.
+
+Main outputs
+    ``data/processed/market_aligned_lagged.csv``, post-to-market mapping and
+    validation diagnostics, alignment/sample tables, and an attention figure.
+
+Methodological rules and boundaries
+    Mapping starts from posts, not already-averaged calendar-day sentiment.
+    For each market separately, same-day trading posts stay on that date and
+    weekend/holiday posts move forward to the next actual trading date, never
+    backward. Mapped posts are then equally averaged; no-post trading dates have
+    attention = 0 and missing sentiment. All lags are created after the merge,
+    so lag 1 means the previous actual trading observation. ``return_lag1`` uses
+    decimal log return. This script defines eligible rows but estimates no model.
+"""
 
 from __future__ import annotations
 
@@ -110,6 +133,10 @@ APPROVED_REGRESSION_VARIABLES = [
 FIGURE_DPI = 300
 NUMERIC_TOLERANCE = 1e-12
 
+
+# ---------------------------------------------------------------------------
+# Load frozen post-level and market inputs; audit the descriptive calendar
+# ---------------------------------------------------------------------------
 
 def file_sha256(path: Path) -> str:
     """Return an uppercase SHA-256 digest for one file."""
@@ -249,7 +276,11 @@ def load_and_validate_inputs() -> tuple[
 
 
 def validate_descriptive_calendar(daily: pd.DataFrame) -> None:
-    """Audit calendar sparsity without using this file for empirical alignment."""
+    """Audit calendar sparsity without using this file for empirical alignment.
+
+    Calendar-day means are valid descriptives, but averaging those means after
+    weekend/holiday mapping would give days rather than posts equal weight.
+    """
 
     required = {"date", "sentiment", "post_count"}
     if missing := required - set(daily.columns):
@@ -276,7 +307,12 @@ def validate_descriptive_calendar(daily: pd.DataFrame) -> None:
 
 
 def map_posts_to_markets(posts: pd.DataFrame, market: pd.DataFrame) -> pd.DataFrame:
-    """Map every post to the same or next actual trading date per market."""
+    """Map every post to the same or next actual trading date per market.
+
+    Each exchange supplies its own observed calendar. ``searchsorted`` with
+    ``side='left'`` preserves same-day matches and otherwise selects the first
+    later market observation; it can never map a post backward.
+    """
 
     mapping_groups: list[pd.DataFrame] = []
     post_dates = posts["original_post_date"].to_numpy(dtype="datetime64[ns]")
@@ -331,7 +367,13 @@ def map_posts_to_markets(posts: pd.DataFrame, market: pd.DataFrame) -> pd.DataFr
 def aggregate_and_merge(
     mapping: pd.DataFrame, market: pd.DataFrame
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Aggregate mapped posts, retain all market rows, then create trading-row lags."""
+    """Aggregate equal-weight posts, retain market rows, then create lags.
+
+    ``sentiment`` is the mean of mapped post scores and ``attention`` is their
+    count. Lagged sentiment, attention, volatility, and decimal log return are
+    formed only after market-specific sorting, so lag 1 is the previous trading
+    observation and not necessarily the previous calendar date.
+    """
 
     mapped = mapping.loc[mapping["mapping_status"].ne("terminal_unmapped")].copy()
     aggregates = (
@@ -353,11 +395,15 @@ def aggregate_and_merge(
         validate="one_to_one",
         sort=False,
     )
+    # A market date with no mapped posts has zero attention but no observed
+    # sentiment. Leaving sentiment missing avoids treating silence as neutral.
     panel["attention"] = panel["attention"].fillna(0).astype("int64")
     groups: list[pd.DataFrame] = []
     for index_name in EXPECTED_MARKETS:
         subset = panel.loc[panel["index_name"].eq(index_name)].copy()
         subset = subset.sort_values("date", kind="stable").reset_index(drop=True)
+        # All four predictors refer to the preceding row of this market's
+        # actual trading calendar, protecting the regression from look-ahead.
         subset["sentiment_lag1"] = subset["sentiment"].shift(1)
         subset["attention_lag1"] = subset["attention"].shift(1)
         subset["volatility_lag1"] = subset["garch_volatility"].shift(1)
@@ -951,7 +997,12 @@ def build_validation_diagnostic(
     hashes: dict[str, str],
     weighting: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Create explicit measured PASS/FAIL checks for all frozen Phase 6 rules."""
+    """Create measured PASS/FAIL checks for all frozen Phase 6 rules.
+
+    The checks reconcile hashes and counts, prove that mapping never moves
+    backward, preserve Phase 5 market variables, and reproduce every lag from
+    the prior trading row. They are empirical reproducibility safeguards.
+    """
 
     rows: list[dict[str, Any]] = []
 

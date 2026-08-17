@@ -1,4 +1,28 @@
-"""Run post-level FinBERT inference for the cleaned Phase 3B Reddit corpus."""
+"""Phase 4A: produce one FinBERT sentiment observation per Reddit post.
+
+Why this phase exists
+    The thesis needs a finance-domain measure of sentiment for each of the
+    1,503 cleaned Ukraine-war-related posts before any daily aggregation.
+
+Main input
+    ``data/processed/reddit_posts_cleaned.csv`` with title/body-derived
+    ``finbert_text`` for the frozen Phase 3B sample.
+
+Main outputs
+    ``data/processed/reddit_posts_finbert.csv`` with positive, neutral, and
+    negative probabilities, ``sentiment_score``, a descriptive class label,
+    chunk metadata, and Phase 4A diagnostics/review samples.
+
+Methodological rules and boundaries
+    The pretrained ``ProsusAI/finbert`` model is used without fine-tuning.
+    Text is divided into approximately 30-word conceptual chunks, capped at
+    120 per post. Any tokenizer-limit safeguard fragments are first recombined
+    into one conceptual-chunk probability vector; conceptual chunks are then
+    equally averaged so implementation safeguards do not give long text extra
+    weight. Post sentiment is positive probability minus negative probability
+    and lies in [-1, 1]; labels are probability argmax descriptions only. This
+    expensive script does not construct daily or trading-day sentiment.
+"""
 
 from __future__ import annotations
 
@@ -122,6 +146,10 @@ SENTIMENT_LABELS = ["positive", "neutral", "negative"]
 SENTENCE_BOUNDARY_PATTERN = re.compile(r"(?<=[.!?])\s+")
 WHITESPACE_PATTERN = re.compile(r"\s+")
 
+
+# ---------------------------------------------------------------------------
+# Validate the frozen post sample and construct conceptual chunks
+# ---------------------------------------------------------------------------
 
 def parse_arguments() -> argparse.Namespace:
     """Parse the small set of Phase 4A execution controls."""
@@ -253,7 +281,12 @@ def parse_boolean_series(series: pd.Series, column_name: str) -> pd.Series:
 
 
 def split_into_chunks(text: str) -> list[str]:
-    """Split text deterministically into sentence-aware ~30-word chunks."""
+    """Split one post into ordered, sentence-aware conceptual chunks.
+
+    The target is approximately 30 whitespace-delimited words. Every word is
+    retained in order, and only an individual sentence longer than the target
+    is divided into consecutive pieces.
+    """
 
     normalized = WHITESPACE_PATTERN.sub(" ", str(text)).strip()
     if not normalized:
@@ -392,7 +425,11 @@ def normalize_label_mapping(model: Any) -> dict[int, str]:
 
 
 def load_finbert() -> tuple[Any, Any, dict[int, str], dict[str, str], Any]:
-    """Load the locked pretrained model and return runtime provenance."""
+    """Load the locked pretrained model and return runtime provenance.
+
+    ``model.eval()`` selects inference behavior only; no training or
+    thesis-specific fine-tuning occurs.
+    """
 
     import torch
     import transformers
@@ -489,7 +526,12 @@ def prepare_model_inputs(
     tokenizer: Any,
     model: Any,
 ) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, int]]:
-    """Create tokenizer-safe model inputs beneath retained conceptual chunks."""
+    """Create tokenizer-safe model inputs beneath retained conceptual chunks.
+
+    Safeguard fragments exist only to respect FinBERT's token limit. Their
+    relationship to the parent conceptual chunk is retained so fragmentation
+    cannot create extra weight in the post-level average.
+    """
 
     maximum_length = supported_input_length(tokenizer, model)
     special_token_count = int(tokenizer.num_special_tokens_to_add(pair=False))
@@ -928,7 +970,12 @@ def reconstruct_conceptual_probabilities(
     scored_model_inputs: pd.DataFrame,
     conceptual_chunks: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Reconstruct one word-count-weighted vector per conceptual chunk."""
+    """Reconstruct one probability vector per conceptual chunk.
+
+    When a chunk required several model inputs, fragment probabilities are
+    combined using their shares of the chunk's words. The returned table again
+    has exactly one positive/neutral/negative vector per conceptual chunk.
+    """
 
     data = scored_model_inputs.copy()
     data["fragment_weight"] = (
@@ -956,7 +1003,11 @@ def reconstruct_conceptual_probabilities(
 
 
 def validate_chunk_probabilities(chunks: pd.DataFrame) -> None:
-    """Validate all chunk-level softmax probabilities."""
+    """Validate all chunk-level softmax probabilities.
+
+    Values in [0, 1] that sum to one verify that the FinBERT outputs and any
+    safeguard reconstruction still form valid probability distributions.
+    """
 
     columns = [f"{label}_probability" for label in SENTIMENT_LABELS]
     values = chunks[columns].to_numpy(dtype=float)
@@ -973,7 +1024,12 @@ def aggregate_posts(
     scored_chunks: pd.DataFrame,
     post_metadata: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Average each class probability across chunks, then derive score and label."""
+    """Average conceptual chunks to one equally weighted post observation.
+
+    Positive, neutral, and negative probabilities are averaged separately.
+    ``sentiment_score`` is positive minus negative, while the argmax label is
+    retained only for descriptive class counts and uses no arbitrary threshold.
+    """
 
     chunk_probability_columns = [
         "positive_probability",
@@ -1547,6 +1603,8 @@ def main() -> None:
         print("Valid complete Phase 4A outputs already exist; inference was skipped.")
         return
 
+    # Conceptual chunks define the weighting unit within each post. Tokenizer
+    # safeguards below may change the number of model calls, never these weights.
     uncapped_chunks, post_metadata = build_chunk_table(input_data)
     chunk_statistics = {
         "total_uncapped_chunks": len(uncapped_chunks),

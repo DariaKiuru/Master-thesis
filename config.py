@@ -1,4 +1,15 @@
-"""Central methodology settings and paths for the thesis empirical pipeline."""
+"""Central settings and file locations for the thesis empirical pipeline.
+
+This file is the common reference point for the 2021-2023 sample definition,
+Reddit sources and relevance vocabularies, FinBERT chunking, the frozen GARCH
+and regression specifications, and every active input/output path. Keeping
+these decisions here makes it easier to connect the Python implementation to
+the written methodology and prevents individual scripts from silently using
+different assumptions.
+
+The file defines settings only: it does not download data, estimate a model,
+or create an empirical output.
+"""
 
 from pathlib import Path
 
@@ -7,6 +18,7 @@ from pathlib import Path
 # Sample
 # -----------------------------------------------------------------------------
 
+# Both endpoints are inclusive throughout the empirical pipeline.
 START_DATE = "2021-01-01"
 END_DATE = "2023-12-31"
 
@@ -20,6 +32,9 @@ SUBREDDITS = [
     "stocks",
     "StockMarket",
 ]
+
+# Posts from these three finance-oriented communities are pooled. Later daily
+# aggregation gives every qualifying post equal weight, not every subreddit.
 
 # Broad candidate-retrieval terms for Phase 3A. These are extraction keywords,
 # not the final Ukraine-war financial relevance rule used in Phase 3B.
@@ -298,6 +313,9 @@ REDDIT_MAX_EXPECTED_FINAL_RELEVANCE_INCREASE = 100
 # FinBERT
 # -----------------------------------------------------------------------------
 
+# ProsusAI/finbert is used as a pretrained model without thesis-specific
+# fine-tuning. CHUNK_MAX_WORDS defines conceptual chunks; the 120-chunk cap is
+# applied per post before post-level probabilities are averaged.
 FINBERT_MODEL = "ProsusAI/finbert"
 CHUNK_MAX_WORDS = 30
 MAX_CHUNKS_PER_POST = 120
@@ -309,6 +327,9 @@ FINBERT_CHECKPOINT_INTERVAL = 800
 # GARCH volatility
 # -----------------------------------------------------------------------------
 
+# These values lock one constant-mean GARCH(1,1) model with Student-t
+# innovations for each market. The estimated conditional standard deviation,
+# not the conditional variance, is retained as the volatility measure.
 GARCH_MEAN_MODEL = "Constant"
 GARCH_VOLATILITY_MODEL = "GARCH"
 GARCH_P = 1
@@ -321,6 +342,8 @@ GARCH_DISTRIBUTION = "StudentsT"
 # Regression
 # -----------------------------------------------------------------------------
 
+# Newey-West/HAC inference uses at most five autocorrelation lags in each of
+# the five separate market regressions.
 HAC_MAX_LAGS = 5
 
 
@@ -334,6 +357,9 @@ YAHOO_MARKET_TICKERS = {
     "CAC_40": "^FCHI",
     "FTSE_100": "^FTSE",
 }
+
+# Yahoo adjusted closes and the Stooq WIG20 Close field are standardized to
+# the common variable name ``close_level`` by the market-data script.
 
 STOOQ_WIG20_SYMBOL = "wig20"
 STOOQ_DOWNLOAD_URL = "https://stooq.pl/q/d/l/"
@@ -368,6 +394,8 @@ WIG20_YEAR_END_RELATIVE_TOLERANCE = 0.05
 # Repository paths
 # -----------------------------------------------------------------------------
 
+# All paths are constructed from this file's location, so scripts can be run
+# from the repository without machine-specific absolute paths.
 REPOSITORY_ROOT = Path(__file__).resolve().parent
 
 DATA_DIR = REPOSITORY_ROOT / "data"

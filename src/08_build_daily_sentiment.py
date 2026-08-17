@@ -1,4 +1,24 @@
-"""Validate frozen Phase 4A scores and build the Phase 4B calendar series."""
+"""Phase 4B: build calendar-day Reddit sentiment and attention.
+
+Why this phase exists
+    Post-level FinBERT observations must be summarized by calendar day for the
+    thesis's descriptive sentiment and discussion-activity analysis.
+
+Main input
+    The frozen 1,503-row ``data/processed/reddit_posts_finbert.csv``.
+
+Main outputs
+    ``data/processed/daily_reddit_sentiment.csv`` on every calendar date from
+    2021-01-01 through 2023-12-31 and a reproducibility summary diagnostic.
+
+Methodological rules and boundaries
+    Daily sentiment is the equal-weight arithmetic mean of post-level scores:
+    S_t = mean(sentiment_score). Daily attention is the number of posts A_t.
+    Thus a day with no qualifying discussion has attention = 0 and missing
+    sentiment, not sentiment = 0. Mean class probabilities and label counts are
+    descriptive support variables only. This calendar file is not the input
+    used for later trading-day regression alignment; Phase 6 starts from posts.
+"""
 
 from __future__ import annotations
 
@@ -67,6 +87,10 @@ DAILY_COLUMNS = [
     *MEAN_PROBABILITY_COLUMNS,
 ]
 
+
+# ---------------------------------------------------------------------------
+# Load and revalidate the frozen post-level FinBERT observations
+# ---------------------------------------------------------------------------
 
 def calculate_sha256(path: Path) -> str:
     """Return an uppercase SHA-256 digest without loading the file at once."""
@@ -191,7 +215,11 @@ def validate_post_scores(data: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, ob
 
 
 def build_daily_series(posts: pd.DataFrame) -> pd.DataFrame:
-    """Calculate the complete calendar-day sentiment and attention series."""
+    """Calculate equal-post-weight sentiment and attention on the full calendar.
+
+    Returns one row per calendar day. ``sentiment`` is the mean post score and
+    ``post_count`` is attention; no-post dates retain missing means.
+    """
 
     observed = (
         posts.groupby("date", sort=True)
@@ -220,6 +248,9 @@ def build_daily_series(posts: pd.DataFrame) -> pd.DataFrame:
         {"date": pd.date_range(START_DATE, END_DATE, freq="D")}
     )
     daily = calendar.merge(observed, on="date", how="left", validate="one_to_one")
+    # Counts are structurally zero when no post was observed. Sentiment and
+    # mean probabilities are deliberately left missing because no discussion
+    # is not evidence of neutral sentiment.
     daily[COUNT_COLUMNS] = daily[COUNT_COLUMNS].fillna(0).astype("int64")
     daily = daily.loc[:, DAILY_COLUMNS]
     return daily
@@ -248,6 +279,8 @@ def validate_daily_series(daily: pd.DataFrame) -> dict[str, object]:
         raise ValueError("Daily attention must contain non-negative integer post counts.")
     if int(attention.sum()) != EXPECTED_POSTS:
         raise ValueError("Daily attention does not reconcile to post-level observations.")
+    # This paired missingness check protects the thesis interpretation of zero
+    # attention versus an observed sentiment score equal to zero.
     discussion_days = daily["post_count"].gt(0)
     sentiment = pd.to_numeric(daily["sentiment"], errors="coerce")
     if sentiment.loc[discussion_days].isna().any():

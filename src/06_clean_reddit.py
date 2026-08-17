@@ -1,4 +1,25 @@
-"""Finalize Phase 3B Reddit relevance, language eligibility, and text fields."""
+"""Phase 3B final: build the cleaned, FinBERT-ready Reddit sample.
+
+Why this phase exists
+    The broad candidate corpus must be restricted to English-language,
+    Ukraine-war-related financial discussion before measuring sentiment.
+
+Main inputs
+    The 3,033-post Phase 3A corpus, frozen final relevance vocabularies, and the
+    150-post manual language-validation sample.
+
+Main outputs
+    ``data/processed/reddit_posts_cleaned.csv`` containing the final 1,503
+    qualifying posts, plus cleaning and language diagnostics.
+
+Methodological rules and boundaries
+    Only r/investing, r/stocks, and r/StockMarket are eligible. Available title
+    and body text are combined; unavailable bodies use the title alone. The
+    final relevance logic requires crisis-specific financial discussion, and
+    confidently non-English posts are excluded. Each retained post remains one
+    observation and later receives equal empirical weight. This script does
+    not run or fine-tune FinBERT and does not aggregate posts by day.
+"""
 
 from __future__ import annotations
 
@@ -98,6 +119,10 @@ LANGUAGE_VALIDATION_COLUMNS = [
     "language_probability",
 ]
 
+
+# ---------------------------------------------------------------------------
+# Reproduce the frozen relevance rule without altering source text
+# ---------------------------------------------------------------------------
 
 def file_sha256(path: Path) -> str:
     """Calculate a file checksum for immutability and reproducibility checks."""
@@ -515,7 +540,12 @@ def remove_standalone_urls(text: str) -> str:
 
 
 def build_cleaned_corpus(data: pd.DataFrame) -> pd.DataFrame:
-    """Keep relevant, language-eligible posts and prepare FinBERT text."""
+    """Keep relevant, language-eligible posts and prepare FinBERT text.
+
+    Returns the final FinBERT-ready corpus and the larger relevant set with
+    language diagnostics. Standalone URLs are removed only from ``finbert_text``;
+    original title and selftext fields remain available for audit.
+    """
 
     relevant = data.loc[data["relevant_candidate"]].copy()
     relevant = add_language_columns(relevant)
@@ -535,7 +565,11 @@ def validate_cleaned_corpus(
     cleaned: pd.DataFrame,
     raw: pd.DataFrame,
 ) -> None:
-    """Validate identifiers, timestamps, source fields, and final text."""
+    """Validate identifiers, timestamps, source fields, and final text.
+
+    Unique IDs prevent a Reddit post receiving more than one empirical weight,
+    and source-field comparisons prove that cleaning did not rewrite evidence.
+    """
 
     if cleaned.empty or cleaned["id"].duplicated().any():
         raise ValueError("The cleaned corpus is empty or contains duplicate IDs.")

@@ -1,4 +1,26 @@
-"""Build Phase 5 market returns and GARCH(1,1)-Student-t volatility."""
+"""Phase 5: calculate market returns and conditional GARCH volatility.
+
+Why this phase exists
+    The thesis regression requires a market-specific conditional volatility
+    measure derived consistently from each European equity index's returns.
+
+Main input
+    The frozen five-market ``data/processed/market_prices.csv`` close-level
+    panel from Phase 2.
+
+Main outputs
+    ``data/processed/market_returns_garch.csv``, return and volatility
+    descriptives, the GARCH parameter/diagnostic tables, and return/conditional-
+    volatility figures.
+
+Methodological rules and boundaries
+    Within each market, log_return_t = ln(P_t / P_t-1) in decimal units and
+    return_pct = 100 * log_return is the estimation input. One constant-mean
+    GARCH(1,1) with Student-t innovations is estimated per market. Saved
+    ``garch_volatility`` is the conditional standard deviation in percentage-
+    return units, not conditional variance; alpha + beta records persistence.
+    This script does not align Reddit data or estimate thesis regressions.
+"""
 
 from __future__ import annotations
 
@@ -71,6 +93,10 @@ MODEL_SPECIFICATION = "Constant mean; GARCH(1,1); Student-t innovations"
 RETURN_IDENTITY_TOLERANCE = 1e-12
 FIGURE_DPI = 300
 
+
+# ---------------------------------------------------------------------------
+# Load and validate the frozen five-market closing-level panel
+# ---------------------------------------------------------------------------
 
 def file_sha256(path: Path) -> str:
     """Return an uppercase SHA-256 digest for one file."""
@@ -178,9 +204,16 @@ def load_and_validate_prices() -> tuple[pd.DataFrame, str]:
 
 
 def calculate_returns(prices: pd.DataFrame) -> pd.DataFrame:
-    """Calculate unmodified log returns strictly within each market."""
+    """Calculate log returns separately within each market.
+
+    ``log_return`` is ln(P_t / P_t-1) in decimal units. ``return_pct`` is
+    100 times that value for GARCH estimation; the decimal series remains the
+    canonical return used later as ``return_lag1``.
+    """
 
     groups: list[pd.DataFrame] = []
+    # Separate market groups prevent the first row of one index from using the
+    # final closing level of a different index as its lagged price.
     for index_name in EXPECTED_MARKETS:
         subset = prices.loc[prices["index_name"].eq(index_name)].copy()
         subset = subset.sort_values("date", kind="stable").reset_index(drop=True)
@@ -252,7 +285,12 @@ def optimizer_value(result: Any, name: str, default: Any = "") -> Any:
 def estimate_garch_models(
     return_panel: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Estimate exactly one approved GARCH model per market."""
+    """Estimate one constant-mean GARCH(1,1)-Student-t model per market.
+
+    Returns the market panel with conditional standard deviations, a parameter
+    table, and convergence diagnostics. Volatility inherits percentage-return
+    units from ``return_pct``; ``alpha + beta`` summarizes shock persistence.
+    """
 
     output = return_panel.copy()
     parameter_rows: list[dict[str, Any]] = []
@@ -293,6 +331,8 @@ def estimate_garch_models(
         )
         optimizer_message = str(optimizer_value(result, "message", ""))
         converged = convergence_flag == 0 and optimizer_success
+        # ``arch`` reports conditional standard deviation here. It is saved
+        # directly as volatility and is not squared into conditional variance.
         conditional_volatility = result.conditional_volatility
         if not isinstance(conditional_volatility, pd.Series):
             conditional_volatility = pd.Series(

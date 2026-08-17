@@ -1,4 +1,28 @@
-"""Estimate the five frozen Phase 7 OLS models with HAC inference."""
+"""Phase 7: estimate five market-specific sentiment-volatility regressions.
+
+Why this phase exists
+    The final thesis test asks whether prior-trading-observation Reddit
+    sentiment is associated with current conditional market volatility and how
+    the estimated relationship differs descriptively across five markets.
+
+Main input
+    Frozen ``data/processed/market_aligned_lagged.csv`` from Phase 6, with
+    frozen Phase 5 and post-level FinBERT files used for hash verification.
+
+Main outputs
+    Long and thesis-ready regression tables, lagged-sentiment comparison and
+    sample tables, model-validation diagnostics, and the comparison figure.
+
+Methodological rules and boundaries
+    Five separate OLS models explain ``garch_volatility`` using an intercept,
+    ``sentiment_lag1``, ``attention_lag1``, ``volatility_lag1``, and decimal
+    ``return_lag1``. Inference uses HAC/Newey-West standard errors with maximum
+    lag 5. The main coefficient is ``sentiment_lag1``; H1 predicts it is negative
+    because lower scores mean more negative sentiment. Eligible observations
+    require observable prior-trading-day sentiment, so the samples are
+    conditional on prior qualifying Reddit discussion. No causal claim,
+    pooled model, robustness search, or alternative specification is added.
+"""
 
 from __future__ import annotations
 
@@ -94,6 +118,10 @@ FIGURE_DPI = 300
 NUMERIC_TOLERANCE = 1e-12
 
 
+# ---------------------------------------------------------------------------
+# Verify frozen inputs and reconstruct the five approved estimation samples
+# ---------------------------------------------------------------------------
+
 def file_sha256(path: Path) -> str:
     """Return an uppercase SHA-256 digest for one file."""
 
@@ -185,7 +213,12 @@ def validate_frozen_hashes() -> dict[str, str]:
 
 
 def load_and_validate_samples() -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
-    """Load the frozen Phase 6 panel and reconstruct eligible market samples."""
+    """Load Phase 6 and reconstruct each market's eligible regression sample.
+
+    Eligibility requires finite current volatility and all four lagged
+    predictors. Because missing ``sentiment_lag1`` removes a row, each sample is
+    conditional on qualifying discussion in the prior trading observation.
+    """
 
     panel = pd.read_csv(MARKET_ALIGNED_LAGGED_FILE, parse_dates=["date"])
     if list(panel.columns) != PANEL_COLUMNS:
@@ -257,7 +290,12 @@ def estimate_models(
     panel: pd.DataFrame,
     samples: dict[str, pd.DataFrame],
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Estimate exactly one approved OLS-HAC model for each market."""
+    """Estimate one approved OLS model with HAC inference for each market.
+
+    Returns a long coefficient table and model-level validation table. The
+    dependent variable is percentage-return-unit conditional standard deviation;
+    predictors are the four frozen lag-1 variables plus an intercept.
+    """
 
     coefficient_rows: list[dict[str, Any]] = []
     validation_rows: list[dict[str, Any]] = []
@@ -276,6 +314,8 @@ def estimate_models(
             )
             for lag_column, source_column in LAG_SOURCE_COLUMNS.items()
         )
+        # Lagged predictors precede the current volatility observation in each
+        # market's trading sequence. No contemporaneous sentiment enters X.
         y = sample[DEPENDENT_VARIABLE].astype(float)
         predictors = sample[REGRESSORS].astype(float)
         X = sm.add_constant(predictors, has_constant="add")
@@ -284,6 +324,8 @@ def estimate_models(
         if matrix_rank != len(TERMS):
             raise ValueError(f"{index_name} model matrix is rank deficient.")
 
+        # HAC/Newey-West changes the estimated covariance matrix used for
+        # standard errors and inference; the coefficient estimator remains OLS.
         result = sm.OLS(y, X, missing="raise").fit(
             cov_type="HAC",
             cov_kwds={"maxlags": HAC_MAX_LAGS},
